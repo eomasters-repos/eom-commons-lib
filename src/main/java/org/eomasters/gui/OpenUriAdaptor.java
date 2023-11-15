@@ -21,13 +21,14 @@
  * =========================LICENSE_END==================================
  */
 
-package org.eomasters.utils;
+package org.eomasters.gui;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
+import org.eomasters.utils.ErrorHandler;
 
 /**
  * Implements an action listener that opens a URI in the default browser.
