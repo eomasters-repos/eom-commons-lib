@@ -27,7 +27,7 @@ class IconWithAddition extends Icon {
   private final Icon addition;
 
   public IconWithAddition(Icon source, Icon addition) {
-    super(source.name + "_" + addition.name);
+    super(source.path + "_" + addition.path);
     this.source = source;
     this.addition = addition;
   }

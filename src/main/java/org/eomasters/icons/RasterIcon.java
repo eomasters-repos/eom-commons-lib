@@ -23,22 +23,22 @@ import javax.swing.ImageIcon;
 /**
  * Representing an icon and provides access to the different sizes.
  */
-class RasterIcon extends Icon {
+public class RasterIcon extends Icon {
 
   /**
-   * Creates a new Icon with the given name.
+   * Creates a new Icon with the given base path without size and file extension.
    *
-   * @param name the name of the icon
+   * @param path the base path
    */
-  public RasterIcon(String name) {
-    super(name);
+  public RasterIcon(String path) {
+    super(path);
   }
 
   @Override
   protected ImageIcon createIcon(SIZE size) {
-    URL resource = Icons.class.getResource("/icons/" + getName() + "_" + size.getSize() + ".png");
+    URL resource = Icons.class.getResource(getPath() + "_" + size.getSize() + ".png");
     if (resource == null) {
-      throw new IllegalStateException("Icon " + getName() + " with size " + size.getSize() + " not found.");
+      throw new IllegalStateException("Icon '" + getPath() + "' with size " + size.getSize() + " not found.");
     }
     return new ImageIcon(resource);
   }

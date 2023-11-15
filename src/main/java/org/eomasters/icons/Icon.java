@@ -24,14 +24,14 @@ import javax.swing.ImageIcon;
 
 public abstract class Icon {
 
-  protected final String name;
+  protected final String path;
 
-  public Icon(String name) {
-    this.name = name;
+  public Icon(String path) {
+    this.path = path;
   }
 
-  public String getName() {
-    return name;
+  public String getPath() {
+    return path;
   }
 
   public ImageIcon getImageIcon(SIZE size) {

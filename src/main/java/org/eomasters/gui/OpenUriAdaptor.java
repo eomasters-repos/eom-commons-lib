@@ -27,7 +27,7 @@ import org.eomasters.utils.ErrorHandler;
 /**
  * Implements an action listener that opens a URI in the default browser.
  */
-class OpenUriAdaptor implements ActionListener {
+public class OpenUriAdaptor implements ActionListener {
 
   private final URI uri;
 
