@@ -39,6 +39,7 @@ class IconsTest {
       assertNotNull(Icons.CODE);
       assertNotNull(Icons.CREDIT_CARD);
       assertNotNull(Icons.DATABASE);
+      assertNotNull(Icons.DOCUMENT);
       assertNotNull(Icons.DOLLAR);
       assertNotNull(Icons.DRAWER);
       assertNotNull(Icons.EYE);
@@ -67,6 +68,7 @@ class IconsTest {
       assertNotNull(Icons.POINTER);
       assertNotNull(Icons.QUESTION_MARK);
       assertNotNull(Icons.RELOAD);
+      assertNotNull(Icons.REPORT);
       assertNotNull(Icons.SHRINK_SCREEN);
       assertNotNull(Icons.SPEECH_BUBBLE);
       assertNotNull(Icons.THUMBS_DOWN);
