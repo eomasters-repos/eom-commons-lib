@@ -45,7 +45,7 @@ public class SvgIcon extends Icon {
     hints.put(ImageTranscoder.KEY_XML_PARSER_VALIDATING, false);
     transcoder.setTranscodingHints(hints);
     try {
-      InputStream resource = Icons.class.getResourceAsStream("/icons/" + getPath() + ".svg");
+      InputStream resource = Icons.class.getResourceAsStream(getPath() + ".svg");
       transcoder.transcode(new TranscoderInput(resource), null);
     } catch (TranscoderException e) {
       return new ImageIcon(new BufferedImage(size.getSize(),size.getSize(), BufferedImage.TYPE_INT_ARGB));
