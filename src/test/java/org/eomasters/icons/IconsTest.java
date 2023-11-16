@@ -36,6 +36,7 @@ class IconsTest {
       assertNotNull(Icons.CLOUD_DOWN);
       assertNotNull(Icons.CLOUD_UP);
       assertNotNull(Icons.COMPUTER);
+      assertNotNull(Icons.CODE);
       assertNotNull(Icons.CREDIT_CARD);
       assertNotNull(Icons.DATABASE);
       assertNotNull(Icons.DOLLAR);
@@ -47,6 +48,7 @@ class IconsTest {
       assertNotNull(Icons.FILTER);
       assertNotNull(Icons.FLAG);
       assertNotNull(Icons.FOLDER);
+      assertNotNull(Icons.FULLSCREEN);
       assertNotNull(Icons.GEAR);
       assertNotNull(Icons.GLOBE);
       assertNotNull(Icons.GRAPH);
@@ -55,6 +57,7 @@ class IconsTest {
       assertNotNull(Icons.MAP_MARKER);
       assertNotNull(Icons.MINUS);
       assertNotNull(Icons.PAPER);
+      assertNotNull(Icons.PEN);
       assertNotNull(Icons.PEOPLE);
       assertNotNull(Icons.PIE_CHART1);
       assertNotNull(Icons.PIE_CHART2);
