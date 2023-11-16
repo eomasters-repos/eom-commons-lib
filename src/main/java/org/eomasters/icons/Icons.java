@@ -37,7 +37,7 @@ public final class Icons {
     final JFrame frame = new JFrame("Icons");
     frame.setPreferredSize(new Dimension(400, 400));
     Container contentPane = frame.getContentPane();
-    SIZE size = SIZE.S24;
+    SIZE size = SIZE.S48;
     Field[] fields = Icons.class.getFields();
     for (Field field : fields) {
       if (Icon.class.isAssignableFrom(field.getType())) {
@@ -108,6 +108,10 @@ public final class Icons {
    * An icon showing a database barrel.
    */
   public static final Icon DATABASE = new SvgIcon("/icons/essentials/Database");
+  /**
+   * An icon showing a document.
+   */
+  public static final Icon DOCUMENT = new SvgIcon("/icons/essentials/Document");
   /**
    * An icon showing a dollar sign.
    */
@@ -220,6 +224,10 @@ public final class Icons {
    * An icon showing a reload sign.
    */
   public static final Icon RELOAD = new SvgIcon("/icons/essentials/Reload");
+  /**
+   * An icon representing report.
+   */
+  public static final Icon REPORT = new SvgIcon("/icons/essentials/Report");
   /**
    * An icon representing ending fullscreen mode.
    */
