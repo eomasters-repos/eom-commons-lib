@@ -17,38 +17,39 @@
 
 package org.eomasters.gui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.border.EmptyBorder;
 
 public class DropdownButton extends JButton {
 
   private final JPopupMenu popupMenu;
 
   public DropdownButton(ImageIcon icon) {
-    this(new JLabel(icon));
+    this(null, icon);
   }
 
   public DropdownButton(String label) {
-    this(new JLabel(label));
+    this(label, null);
   }
 
-  private DropdownButton(JLabel westLabel) {
-    setLayout(new BorderLayout(5, 0));
-    westLabel.setBorder(new EmptyBorder(0, 0, 0, 0));
-    add(westLabel, BorderLayout.WEST);
-    JLabel arrowLabel = new JLabel("▼");
-    add(arrowLabel, BorderLayout.EAST);
-
+  public DropdownButton(String label, ImageIcon icon) {
+    setIcon(icon);
+    setText(label);
     popupMenu = new JPopupMenu();
     popupMenu.setVisible(false);
-
     addActionListener(this::actionPerformed);
+  }
+
+  @Override
+  public void setText(String text) {
+    if (text == null) {
+      super.setText(text);
+    } else {
+      super.setText(text + " ▼");
+    }
   }
 
   public void setPopupComponent(JComponent component) {
@@ -57,7 +58,7 @@ public class DropdownButton extends JButton {
   }
 
   public void showPopup(boolean show) {
-    if(show) {
+    if (show) {
       popupMenu.show(DropdownButton.this, 0, DropdownButton.this.getHeight());
     } else {
       popupMenu.setVisible(false);
