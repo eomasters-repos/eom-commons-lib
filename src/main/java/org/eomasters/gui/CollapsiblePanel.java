@@ -36,6 +36,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
+import org.eomasters.icons.Icon.SIZE;
+import org.eomasters.icons.Icons;
 import org.eomasters.utils.SystemHelper;
 
 /**
@@ -43,8 +45,6 @@ import org.eomasters.utils.SystemHelper;
  */
 public class CollapsiblePanel extends JPanel {
 
-  private static final String EXPAND_CHAR = "▶";
-  private static final String COLLAPSE_CHAR = "▼";
   private final JLabel toggleLabel;
   private final JComponent contentPanel;
   private final JPanel titlePanel;
@@ -148,17 +148,18 @@ public class CollapsiblePanel extends JPanel {
    */
   public void setCollapsed(boolean collapse) {
     if (collapse) {
-      toggleLabel.setText(EXPAND_CHAR);
+      toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(SIZE.S16));
       contentPanel.setVisible(false);
       setPreferredSize(new Dimension(getSize().width, getCollapsedHeight()));
     } else {
-      toggleLabel.setText(COLLAPSE_CHAR);
+      toggleLabel.setIcon(Icons.ARROW_RIGHT.getImageIcon(SIZE.S16));
       contentPanel.setVisible(true);
       setPreferredSize(null);
     }
     revalidate();
   }
 
+  // TODO: move to FileIo
   private static JButton createExportButton(JPanel contentPane, JTextArea textArea) {
     JButton exportBtn = new JButton("Export to File");
     exportBtn.addActionListener(e -> {
