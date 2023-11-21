@@ -46,7 +46,7 @@ public class DropdownButton extends JButton {
   @Override
   public void setText(String text) {
     if (text == null) {
-      super.setText(text);
+      super.setText("▼");
     } else {
       super.setText(text + " ▼");
     }
