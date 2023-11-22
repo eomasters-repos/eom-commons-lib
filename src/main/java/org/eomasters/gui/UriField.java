@@ -41,10 +41,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class UriField extends JPanel {
 
-  private String label;
-  private String uri;
-  private boolean editable;
-
   public static void main(String[] args) {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,9 +67,12 @@ public class UriField extends JPanel {
 
   private final Font editFont;
   private final Font clickFont;
-
+  private boolean editable;
+  private final JTextField textField;
+  private final TextEditListener textEditListener;
   private Cursor previousCursor;
-  private JTextField textField;
+  private String label;
+  private String uri;
 
 
   public UriField() {
@@ -88,34 +87,17 @@ public class UriField extends JPanel {
     this.uri = uri;
     this.label = label;
     setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    setLayout(new MigLayout("top, left, fillx, insets 0"));
     textField = new JTextField();
     textField.setForeground(Color.BLUE.darker());
     textField.setEditable(false);
-    add(textField, "top, left, growx, pushx, wrap, insets 0");
+    add(textField, "top, left, growx, pushx, wrap");
     editFont = textField.getFont();
     clickFont = editFont.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON));
     MouseHandler mouseHandler = new MouseHandler(this);
     textField.addMouseListener(mouseHandler);
     textField.addMouseMotionListener(mouseHandler);
-    textField.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        updateUri();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        updateUri();
-      }
-
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-      }
-
-      private void updateUri() {
-        parseUriLabel(textField.getText());
-      }
-    });
+    textEditListener = new TextEditListener();
     updateState();
   }
 
@@ -170,12 +152,15 @@ public class UriField extends JPanel {
     if (editable) {
       textField.setText(getMarkdown());
       textField.setFont(editFont);
+      textField.getDocument().addDocumentListener(textEditListener);
       setToolTipText("Define Link: [Label](URL)");
     } else {
       textField.setText(label);
       textField.setFont(clickFont);
-      setToolTipText("Click to open Link");
+      textField.getDocument().removeDocumentListener(textEditListener);
+      setToolTipText("Click to open link");
     }
+    textField.setCaretPosition(0);
   }
 
   private String getMarkdown() {
@@ -240,4 +225,24 @@ public class UriField extends JPanel {
 
   }
 
+  private class TextEditListener implements DocumentListener {
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+      updateUri();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+      updateUri();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+    }
+
+    private void updateUri() {
+      parseUriLabel(textField.getText());
+    }
+  }
 }
