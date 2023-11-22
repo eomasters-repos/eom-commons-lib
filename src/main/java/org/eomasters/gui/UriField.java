@@ -144,11 +144,7 @@ public class UriField extends JPanel {
   }
 
   public void setUri(String uri) {
-    setUri(uri, null);
-  }
-
-  public void setUri(URI uri) {
-    setUri(uri.toString(), uri.toString());
+    setUri(uri, uri);
   }
 
   public void setUri(String uri, String label) {
