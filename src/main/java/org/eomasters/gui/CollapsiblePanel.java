@@ -57,7 +57,7 @@ public class CollapsiblePanel extends JPanel {
   public CollapsiblePanel(String title) {
     super(new BorderLayout(5, 5));
     setName("CollapsiblePanel." + title.replaceAll(" ", "_"));
-
+    setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
     MouseAdapter collapser = new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -65,7 +65,7 @@ public class CollapsiblePanel extends JPanel {
       }
     };
 
-    titlePanel = new JPanel(new MigLayout("flowx", "[][][fill]"));
+    titlePanel = new JPanel(new MigLayout("flowx, insets 0", "[][][fill]"));
     titlePanel.addMouseListener(collapser);
     JLabel titleLabel = new JLabel(title);
     titleLabel.addMouseListener(collapser);
@@ -76,7 +76,7 @@ public class CollapsiblePanel extends JPanel {
 
     add(titlePanel, BorderLayout.NORTH);
 
-    contentPanel = new JPanel(new MigLayout("fill"));
+    contentPanel = new JPanel(new MigLayout("fill, insets 0"));
     add(contentPanel, BorderLayout.CENTER);
 
     doLayout();
@@ -152,7 +152,7 @@ public class CollapsiblePanel extends JPanel {
       contentPanel.setVisible(false);
       setPreferredSize(new Dimension(getSize().width, getCollapsedHeight()));
     } else {
-      toggleLabel.setIcon(Icons.ARROW_RIGHT.getImageIcon(SIZE.S16));
+      toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(SIZE.S16));
       contentPanel.setVisible(true);
       setPreferredSize(null);
     }
