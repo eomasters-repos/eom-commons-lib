@@ -17,11 +17,13 @@
 
 package org.eomasters.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 
 /**
  * A multi-line text component based on a JTextArea.
@@ -40,9 +42,8 @@ public class MultiLineText extends JTextArea {
     setEditable(false);
     setLineWrap(true);
     setWrapStyleWord(true);
-    JLabel label = new JLabel();
-    setFont(label.getFont());
-    setBackground(label.getBackground());
+    setBackground((Color) UIManager.get("Label.background"));
+    setBorder((Border) UIManager.get("TextField.border"));
     int textWidth = getTextWidth(text);
     int preferredWidth = (int) (Math.ceil(textWidth / 50.) * 50);
     setPreferredWidth(preferredWidth);
