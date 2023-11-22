@@ -184,7 +184,7 @@ public class UriField extends JPanel {
 
   private boolean isClickable() {
     if (IS_BROWSING_SUPPORTED) {
-      return !editable;
+      return !editable && uri != null && !uri.isEmpty();
     }
     return false;
   }
