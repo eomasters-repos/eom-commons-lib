@@ -51,8 +51,6 @@ public class UriField extends JPanel {
     JPanel panel = new JPanel(new MigLayout("top, left, insets 0, gap 10"));
     frame.add(panel);
 
-    UriField uriField1 = new UriField(URI.create("https://www.eomasters.org"));
-    uriField1.setEditable(true);
     UriField uriField2 = new UriField("https://www.eomasters.org");
     uriField2.setEditable(true);
     UriField uriField3 = new UriField("[EOMasters](https://www.eomasters.org)");
@@ -60,7 +58,6 @@ public class UriField extends JPanel {
     UriField uriField4 = new UriField();
     uriField4.setEditable(true);
 
-    panel.add(uriField1, "wrap");
     panel.add(uriField2, "wrap");
     panel.add(uriField3, "wrap");
     panel.add(uriField4, "wrap");
@@ -83,14 +80,9 @@ public class UriField extends JPanel {
     this(null, null);
   }
 
-  public UriField(URI uri) {
-    this(uri.toString());
-  }
-
   public UriField(String uri) {
     this(uri, uri);
   }
-
 
   private UriField(String uri, String label) {
     this.uri = uri;
