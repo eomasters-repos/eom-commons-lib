@@ -28,6 +28,7 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.net.URI;
 import java.util.Map;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -51,7 +52,7 @@ public class UriField extends JPanel {
   public static void main(String[] args) {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    JPanel panel = new JPanel(new MigLayout("top, left, gap 10"));
+    JPanel panel = new JPanel(new MigLayout("top, left, gap 10, insets 0"));
     frame.add(panel);
     frame.setLocationRelativeTo(null);
 
@@ -106,10 +107,11 @@ public class UriField extends JPanel {
   private UriField(String uri, String label) {
     this.uri = uri;
     this.label = label;
+    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     cards = new CardLayout();
     setLayout(cards);
 
-    JPanel viewCard = new JPanel(new MigLayout("top, left, fillx"));
+    JPanel viewCard = new JPanel(new MigLayout("top, left, fillx, insets 0"));
     viewField = new JTextField();
     viewField.setForeground(Color.BLUE.darker());
     viewField.setEditable(false);
@@ -121,7 +123,7 @@ public class UriField extends JPanel {
     viewField.addMouseMotionListener(mouseHandler);
     viewCard.add(viewField, "top, left, growx, pushx, wrap");
 
-    JPanel editCard = new JPanel(new MigLayout("top, left, fillx, gapx 2"));
+    JPanel editCard = new JPanel(new MigLayout("top, left, fillx, gapx 2, insets 0"));
     labelField = new PromptTextField("Enter label");
     Dimension labelFieldPreferredSize = labelField.getPreferredSize();
     labelFieldPreferredSize.width = 100;
