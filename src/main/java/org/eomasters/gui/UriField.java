@@ -17,22 +17,23 @@
 
 package org.eomasters.gui;
 
+import java.awt.CardLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
-import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.net.URI;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
@@ -41,22 +42,44 @@ import net.miginfocom.swing.MigLayout;
 
 public class UriField extends JPanel {
 
+  protected static final String VIEW_CARD = "view";
+  protected static final String EDIT_CARD = "edit";
+  private final CardLayout cards;
+  private final JTextField labelField;
+  private final JTextField uriField;
+
   public static void main(String[] args) {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    JPanel panel = new JPanel(new MigLayout("top, left, insets 0, gap 10"));
+    JPanel panel = new JPanel(new MigLayout("top, left, gap 10"));
     frame.add(panel);
+    frame.setLocationRelativeTo(null);
 
+    UriField uriField1 = new UriField();
+    uriField1.setEditable(true);
     UriField uriField2 = new UriField("https://www.eomasters.org");
     uriField2.setEditable(true);
-    UriField uriField3 = new UriField("[EOMasters](https://www.eomasters.org)");
+    UriField uriField3 = new UriField("https://www.eomasters.org", "EOMasters");
     uriField3.setEditable(true);
-    UriField uriField4 = new UriField();
-    uriField4.setEditable(true);
 
-    panel.add(uriField2, "wrap");
-    panel.add(uriField3, "wrap");
-    panel.add(uriField4, "wrap");
+    Checkbox editable1 = new Checkbox("Editable", true);
+    editable1.addItemListener(e -> {
+      uriField1.setEditable(e.getStateChange() == ItemEvent.SELECTED);
+    });
+    Checkbox editable2 = new Checkbox("Editable", true);
+    editable2.addItemListener(e -> {
+      uriField2.setEditable(e.getStateChange() == ItemEvent.SELECTED);
+    });
+    Checkbox editable3 = new Checkbox("Editable", true);
+    editable3.addItemListener(e -> {
+      uriField3.setEditable(e.getStateChange() == ItemEvent.SELECTED);
+    });
+    panel.add(editable1);
+    panel.add(uriField1, "grow, pushx, wrap");
+    panel.add(editable2);
+    panel.add(uriField2, "grow, wrap");
+    panel.add(editable3);
+    panel.add(uriField3, "grow, wrap");
 
     frame.pack();
     SwingUtilities.invokeLater(() -> frame.setVisible(true));
@@ -65,11 +88,8 @@ public class UriField extends JPanel {
   private final static boolean IS_BROWSING_SUPPORTED =
       Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
 
-  private final Font editFont;
-  private final Font clickFont;
   private boolean editable;
-  private final JTextField textField;
-  private final TextEditListener textEditListener;
+  private final JTextField viewField;
   private Cursor previousCursor;
   private String label;
   private String uri;
@@ -86,38 +106,41 @@ public class UriField extends JPanel {
   private UriField(String uri, String label) {
     this.uri = uri;
     this.label = label;
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    setLayout(new MigLayout("top, left, fillx, insets 0"));
-    textField = new JTextField();
-    textField.setForeground(Color.BLUE.darker());
-    textField.setEditable(false);
-    add(textField, "top, left, growx, pushx, wrap");
-    editFont = textField.getFont();
-    clickFont = editFont.deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON));
-    MouseHandler mouseHandler = new MouseHandler(this);
-    textField.addMouseListener(mouseHandler);
-    textField.addMouseMotionListener(mouseHandler);
-    textEditListener = new TextEditListener();
-    updateState();
-  }
+    cards = new CardLayout();
+    setLayout(cards);
 
-  private void parseUriLabel(String text) {
-    if (text != null && text.startsWith("[")) {
-      Pattern pattern = Pattern.compile("\\A\\[(.*?)]\\((.*?)\\)\\Z");
-      Matcher matcher = pattern.matcher(text);
-      // extract label and uri from markdown
-      if (matcher.find()) {
-        uri = matcher.group(2);
-        label = matcher.group(1);
-      } else {
-        ComponentHighlighter highlighter = new ComponentHighlighter();
-        highlighter.setInfoMessage("Invalid Link Format");
-        highlighter.highlight(textField);
-      }
-    } else {
-      uri = text;
-      label = text;
-    }
+    JPanel viewCard = new JPanel(new MigLayout("top, left, fillx"));
+    viewField = new JTextField();
+    viewField.setForeground(Color.BLUE.darker());
+    viewField.setEditable(false);
+    viewField.setToolTipText("Click to open link");
+    viewField.setFont(
+        UIManager.getFont("TextField.font").deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
+    MouseHandler mouseHandler = new MouseHandler(this);
+    viewField.addMouseListener(mouseHandler);
+    viewField.addMouseMotionListener(mouseHandler);
+    viewCard.add(viewField, "top, left, growx, pushx, wrap");
+
+    JPanel editCard = new JPanel(new MigLayout("top, left, fillx, gapx 2"));
+    labelField = new PromptTextField("Enter label");
+    Dimension labelFieldPreferredSize = labelField.getPreferredSize();
+    labelFieldPreferredSize.width = 100;
+    labelField.setPreferredSize(labelFieldPreferredSize);
+    labelField.setToolTipText("Specify the label of the link");
+    labelField.getDocument().addDocumentListener(new TextEditListener());
+    uriField = new PromptTextField("Enter URL");
+    Dimension uriFieldPreferredSize = uriField.getPreferredSize();
+    uriFieldPreferredSize.width = 100;
+    uriField.setPreferredSize(uriFieldPreferredSize);
+    uriField.setToolTipText("Specify the URL of the link");
+    uriField.getDocument().addDocumentListener(new TextEditListener());
+    editCard.add(labelField, "top, left, growx 40, pushx");
+    editCard.add(uriField, "top, left, growx 60, pushx, wrap");
+
+    add(viewCard, VIEW_CARD);
+    add(editCard, EDIT_CARD);
+
+    updateState();
   }
 
   public void setEditable(boolean editable) {
@@ -148,23 +171,17 @@ public class UriField extends JPanel {
   }
 
   public void updateState() {
-    textField.setEditable(editable);
     if (editable) {
-      textField.setText(getMarkdown());
-      textField.setFont(editFont);
-      textField.getDocument().addDocumentListener(textEditListener);
-      setToolTipText("Define Link: [Label](URL)");
+      cards.show(this, EDIT_CARD);
+      labelField.setText(label);
+      labelField.setCaretPosition(0);
+      uriField.setText(uri);
+      uriField.setCaretPosition(0);
     } else {
-      textField.setText(label);
-      textField.setFont(clickFont);
-      textField.getDocument().removeDocumentListener(textEditListener);
-      setToolTipText("Click to open link");
+      cards.show(this, VIEW_CARD);
+      viewField.setText(label);
+      viewField.setCaretPosition(0);
     }
-    textField.setCaretPosition(0);
-  }
-
-  private String getMarkdown() {
-    return String.format("[%s](%s)", label != null ? label : "", uri != null ? uri : "");
   }
 
   private boolean isClickable() {
@@ -227,22 +244,28 @@ public class UriField extends JPanel {
 
   private class TextEditListener implements DocumentListener {
 
+    public TextEditListener() {
+    }
+
     @Override
     public void insertUpdate(DocumentEvent e) {
-      updateUri();
+      update();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-      updateUri();
+      update();
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
-    private void updateUri() {
-      parseUriLabel(textField.getText());
+    private void update() {
+      UriField.this.label = labelField.getText();
+      UriField.this.uri = uriField.getText();
+
     }
   }
+
 }
