@@ -48,6 +48,7 @@ public class UriField extends JPanel {
   private final CardLayout cards;
   private final JTextField labelField;
   private final JTextField uriField;
+  private final TextEditListener editListener = new TextEditListener();
 
   public static void main(String[] args) {
     JFrame frame = new JFrame();
@@ -129,13 +130,13 @@ public class UriField extends JPanel {
     labelFieldPreferredSize.width = 100;
     labelField.setPreferredSize(labelFieldPreferredSize);
     labelField.setToolTipText("Specify the label of the link");
-    labelField.getDocument().addDocumentListener(new TextEditListener());
+    labelField.getDocument().addDocumentListener(editListener);
     uriField = new PromptTextField("Enter URL");
     Dimension uriFieldPreferredSize = uriField.getPreferredSize();
     uriFieldPreferredSize.width = 100;
     uriField.setPreferredSize(uriFieldPreferredSize);
     uriField.setToolTipText("Specify the URL of the link");
-    uriField.getDocument().addDocumentListener(new TextEditListener());
+    uriField.getDocument().addDocumentListener(editListener);
     editCard.add(labelField, "top, left, growx 40, pushx");
     editCard.add(uriField, "top, left, growx 60, pushx, wrap");
 
@@ -175,15 +176,21 @@ public class UriField extends JPanel {
   public void updateState() {
     if (editable) {
       cards.show(this, EDIT_CARD);
-      labelField.setText(label);
+      setTextWithoutEvent(labelField, label);
       labelField.setCaretPosition(0);
-      uriField.setText(uri);
+      setTextWithoutEvent(uriField, uri);
       uriField.setCaretPosition(0);
     } else {
       cards.show(this, VIEW_CARD);
       viewField.setText(label);
       viewField.setCaretPosition(0);
     }
+  }
+
+  private void setTextWithoutEvent(JTextField field, String text) {
+    field.getDocument().removeDocumentListener(editListener);
+    field.setText(text);
+    field.getDocument().addDocumentListener(editListener);
   }
 
   private boolean isClickable() {
