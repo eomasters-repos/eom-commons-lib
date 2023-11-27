@@ -102,7 +102,7 @@ public class CollapsiblePanel extends JPanel {
     JScrollPane scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    JPanel reportPreview = new JPanel(new MigLayout("fill, debug"));
+    JPanel reportPreview = new JPanel(new MigLayout("fill"));
     reportPreview.add(scrollPane, "top, left, grow, pushx, wrap");
     CollapsiblePanel collapsiblePanel = new CollapsiblePanel(title);
     JButton exportBtn = createExportButton(collapsiblePanel, textArea);
