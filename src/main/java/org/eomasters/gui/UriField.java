@@ -104,7 +104,7 @@ public class UriField extends JPanel {
     this(uri, uri);
   }
 
-  private UriField(String uri, String label) {
+  public UriField(String uri, String label) {
     this.uri = uri;
     this.label = label;
     setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
