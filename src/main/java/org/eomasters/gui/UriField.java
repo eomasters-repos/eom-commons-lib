@@ -43,13 +43,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class UriField extends JPanel {
 
-  protected static final String VIEW_CARD = "view";
-  protected static final String EDIT_CARD = "edit";
-  private final CardLayout cards;
-  private final JTextField labelField;
-  private final JTextField uriField;
-  private final TextEditListener editListener = new TextEditListener();
-
   public static void main(String[] args) {
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,11 +80,17 @@ public class UriField extends JPanel {
     SwingUtilities.invokeLater(() -> frame.setVisible(true));
   }
 
-  private final static boolean IS_BROWSING_SUPPORTED =
-      Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
 
-  private boolean editable;
+  private static final String VIEW_CARD = "view";
+  private static final String EDIT_CARD = "edit";
+  private static final boolean IS_BROWSING_SUPPORTED =
+      Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
+  private final CardLayout cards;
   private final JTextField viewField;
+  private final JTextField labelField;
+  private final JTextField uriField;
+  private final TextEditListener editListener = new TextEditListener();
+  private boolean editable;
   private Cursor previousCursor;
   private String label;
   private String uri;
