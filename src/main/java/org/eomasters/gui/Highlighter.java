@@ -27,7 +27,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-public class ComponentHighlighter {
+public class Highlighter {
 
   private Border oldBorder;
   private Color color = Color.red.darker();
@@ -86,6 +86,12 @@ public class ComponentHighlighter {
     if (popupComponent != null) {
       popupComponent.hidePopup();
     }
+  }
+
+  public static void error(JComponent component, String message) {
+    Highlighter highlighter = new Highlighter();
+    highlighter.setInfoMessage("message");
+    highlighter.highlight(component);
   }
 }
 
