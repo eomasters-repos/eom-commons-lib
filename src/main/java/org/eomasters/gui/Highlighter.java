@@ -90,7 +90,7 @@ public class Highlighter {
 
   public static void error(JComponent component, String message) {
     Highlighter highlighter = new Highlighter();
-    highlighter.setInfoMessage("message");
+    highlighter.setInfoMessage(message);
     highlighter.highlight(component);
   }
 }
