@@ -96,13 +96,13 @@ public final class Dialogs {
    *
    * @param title     the title
    * @param message   the message
-   * @param exception the exception
+   * @param throwable the throwable
    */
-  public static void error(String title, String message, Exception exception) {
+  public static void error(String title, String message, Throwable throwable) {
     JPanel messagePanel = new JPanel(new MigLayout("top, left, fillx, gap 5 5"));
     messagePanel.add(new JLabel(message), "wrap");
     StringWriter stringWriter = new StringWriter();
-    exception.printStackTrace(new PrintWriter(stringWriter));
+    throwable.printStackTrace(new PrintWriter(stringWriter));
     CollapsiblePanel detailsArea = CollapsiblePanel.createLongTextPanel("Details", stringWriter.toString());
     messagePanel.add(detailsArea, "top, left, grow, wrap");
     messagePanel.doLayout();
