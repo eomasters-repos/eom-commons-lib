@@ -92,7 +92,7 @@ public final class Dialogs {
 
   /**
    * Shows an error dialog with a collapsible area showing more details about the error. The details area is collapsed
-   * by default. The details can be exported to a file or to the clipboard
+   * by default. The details can be exported to a file or to the clipboard.
    *
    * @param title     the title
    * @param message   the message
@@ -100,7 +100,7 @@ public final class Dialogs {
    */
   public static void error(String title, String message, Throwable throwable) {
     JPanel messagePanel = new JPanel(new MigLayout("top, left, fillx, gap 5 5"));
-    messagePanel.add(new JLabel(message), "wrap");
+    messagePanel.add(new JLabel("<html>"+ message + ": <br>" + throwable.getMessage()), "wrap");
     StringWriter stringWriter = new StringWriter();
     throwable.printStackTrace(new PrintWriter(stringWriter));
     CollapsiblePanel detailsArea = CollapsiblePanel.createLongTextPanel("Details", stringWriter.toString());
