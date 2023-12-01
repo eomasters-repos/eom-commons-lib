@@ -18,14 +18,10 @@
 package org.eomasters.icons;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.ImageIcon;
-import org.apache.batik.anim.dom.SVGDOMImplementation;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscodingHints;
-import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.apache.batik.util.SVGConstants;
+import org.eomasters.utils.ImageUtils;
 
 public class SvgIcon extends Icon {
 
@@ -35,23 +31,12 @@ public class SvgIcon extends Icon {
 
   @Override
   protected ImageIcon createIcon(SIZE size) {
-    SvgTranscoder transcoder = new SvgTranscoder();
-    TranscodingHints hints = new TranscodingHints();
-    hints.put(ImageTranscoder.KEY_WIDTH, (float) 500);
-    hints.put(ImageTranscoder.KEY_HEIGHT, (float) 500);
-    hints.put(ImageTranscoder.KEY_DOM_IMPLEMENTATION, SVGDOMImplementation.getDOMImplementation());
-    hints.put(ImageTranscoder.KEY_DOCUMENT_ELEMENT_NAMESPACE_URI, SVGConstants.SVG_NAMESPACE_URI);
-    hints.put(ImageTranscoder.KEY_DOCUMENT_ELEMENT, SVGConstants.SVG_SVG_TAG);
-    hints.put(ImageTranscoder.KEY_XML_PARSER_VALIDATING, false);
-    transcoder.setTranscodingHints(hints);
     try {
       InputStream resource = Icons.class.getResourceAsStream(getPath() + ".svg");
-      transcoder.transcode(new TranscoderInput(resource), null);
-    } catch (TranscoderException e) {
-      return new ImageIcon(new BufferedImage(size.getSize(),size.getSize(), BufferedImage.TYPE_INT_ARGB));
+      return new ImageIcon(ImageUtils.loadSvgImage(resource, size.getSize(), size.getSize()));
+    } catch (IOException e) {
+      return new ImageIcon(new BufferedImage(size.getSize(), size.getSize(), BufferedImage.TYPE_INT_ARGB));
     }
-
-    return new ImageIcon(transcoder.getImage().getScaledInstance(size.getSize(), size.getSize(), BufferedImage.SCALE_SMOOTH));
   }
 
 }

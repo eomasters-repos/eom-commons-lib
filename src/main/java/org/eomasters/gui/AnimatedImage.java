@@ -1,7 +1,7 @@
 /*-
  * ========================LICENSE_START=================================
- * EOMTBX PRO - EOMasters Toolbox PRO for SNAP
- * -> https://www.eomasters.org/sw/EOMTBX
+ * EOM Commons - Library of common utilities for Java
+ * -> https://www.eomasters.org/
  * ======================================================================
  * Copyright (C) 2023 Marco Peters
  * ======================================================================
