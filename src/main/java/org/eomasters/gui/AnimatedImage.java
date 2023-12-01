@@ -31,7 +31,7 @@ public class AnimatedImage extends JPanel {
   private final float fWidth;
   private final float fHeight;
   private int frameIdx;
-  private float scaling;
+  private double scaling;
   private int delay;
   private final Timer timer;
 
@@ -46,7 +46,7 @@ public class AnimatedImage extends JPanel {
    * @param scaling the scaling applied to the frames. A value of <=0 means the images are scaled to the size of the
    *                component, all other values are multiplied with the original size
    */
-  public AnimatedImage(Image[] frames, float scaling) {
+  public AnimatedImage(Image[] frames, double scaling) {
     if (frames.length == 0) {
       throw new IllegalArgumentException("frames must not be empty");
     }
@@ -118,14 +118,14 @@ public class AnimatedImage extends JPanel {
   private AffineTransform createTransform() {
     float cWidth = getWidth();
     float cHeight = getHeight();
-    float effectiveScaling;
+    double effectiveScaling;
     if (scaling <= 0) {
       effectiveScaling = Math.min(cWidth / fWidth, cHeight / fHeight);
     } else {
       effectiveScaling = scaling;
     }
-    float x = (cWidth - (fWidth * effectiveScaling)) / 2;
-    float y = (cHeight - (fHeight * effectiveScaling)) / 2;
+    double x = (cWidth - (fWidth * effectiveScaling)) / 2;
+    double y = (cHeight - (fHeight * effectiveScaling)) / 2;
     AffineTransform transform = AffineTransform.getTranslateInstance(x, y);
     transform.scale(effectiveScaling, effectiveScaling);
     return transform;

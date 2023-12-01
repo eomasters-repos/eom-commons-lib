@@ -102,11 +102,10 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
       try {
         URL resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
         Image[] frames = ImageUtils.loadFramesFromGif(ImageIO.createImageInputStream(Objects.requireNonNull(resource).openStream()));
-        image = new AnimatedImage(frames, -1);
+        image = new AnimatedImage(frames, 0.2);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      // AnimatedImage image = new AnimatedImage(loadNumberedImages("/icons/progress/indefinite/pos_#.png", 0, 23), 0.2f);
       image.setBackground(new Color(0, 0, 0, 89));
       image.setOpaque(false);
 
