@@ -25,11 +25,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -101,13 +98,15 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
       AnimatedImage image;
       try {
         URL resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
-        Image[] frames = ImageUtils.loadFramesFromGif(ImageIO.createImageInputStream(Objects.requireNonNull(resource).openStream()));
+        Image[] frames = ImageUtils.loadFramesFromGif(
+            ImageIO.createImageInputStream(Objects.requireNonNull(resource).openStream()));
         image = new AnimatedImage(frames, 0.2);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
       image.setBackground(new Color(0, 0, 0, 89));
       image.setOpaque(false);
+      image.start();
 
       component.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
@@ -134,7 +133,6 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
       if (component.isShowing()) {
         popupComponent.show(component, 0, 0);
       }
-      image.start();
     }
   }
 
@@ -167,7 +165,7 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
     @Override
     public void componentShown(ComponentEvent e) {
-      if(!isDone()) {
+      if (!isDone()) {
         popupComponent.setVisible(true);
       }
     }

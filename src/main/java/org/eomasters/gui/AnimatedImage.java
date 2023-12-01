@@ -71,9 +71,7 @@ public class AnimatedImage extends JPanel {
     Dimension size = new Dimension(Math.round(fWidth), Math.round(fHeight));
     setPreferredSize(size);
     setSize(size);
-
   }
-
 
   public void setScaling(float scaling) {
     this.scaling = scaling;
