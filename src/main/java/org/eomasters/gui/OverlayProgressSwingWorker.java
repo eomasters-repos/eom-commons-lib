@@ -28,6 +28,8 @@ import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,9 +44,13 @@ import javax.swing.WindowConstants;
 import org.eomasters.icons.Icon.SIZE;
 import org.eomasters.icons.Icons;
 import org.eomasters.utils.ImageUtils;
+import org.eomasters.utils.ProgressManager;
+import org.eomasters.utils.ProgressWorker;
 
 public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
+  private static final int MAX_NOT_SHOWING_PROGRESS = 200;
+  private static final int SHOW_DELAY = 50;
   private SyncComponentSizeListener sizeListener;
 
   public static void main(String[] args) {
@@ -58,13 +64,25 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     contentPane.setLayout(new BorderLayout());
     contentPane.add(overlayed, BorderLayout.CENTER);
     contentPane.add(new JButton("Visible"), BorderLayout.SOUTH);
-
-    progressBtn.addActionListener(e -> new OverlayProgressSwingWorker(overlayed, () -> {
-      try {
-        Thread.sleep(5000);
-      } catch (InterruptedException ignored) {
-      }
-    }).execute());
+    progressBtn.addActionListener(e -> {
+      ProgressWorker testWorker = ProgressManager.registerTask("test", 3000);
+      testWorker.setWorker(() -> {
+        try {
+          int time = 1000;
+          Thread.sleep(time);
+          testWorker.worked(time);
+          System.out.println("Progress: " + testWorker.getProgress());
+          Thread.sleep(time);
+          testWorker.worked(time);
+          System.out.println("Progress: " + testWorker.getProgress());
+          Thread.sleep(time);
+          testWorker.worked(time);
+          System.out.println("Progress: " + testWorker.getProgress());
+        } catch (InterruptedException ignored) {
+        }
+      });
+      new OverlayProgressSwingWorker(overlayed, testWorker).execute();
+    });
 
     frame.setSize(400, 600);
     frame.setLocationRelativeTo(null);
@@ -75,7 +93,7 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
   private static JPopupMenu popupComponent;
   private final JComponent component;
-  private final Runnable runnable;
+  private final ProgressWorker worker;
   private Cursor originalCursor;
 
 
@@ -83,11 +101,11 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
    * Creates a new swing worker that shows a progress indicator on a glass pane while it is running.
    *
    * @param component the component which is overlayed with a progress indicator
-   * @param runnable  the runnable to execute
+   * @param worker    the worker to run
    */
-  public OverlayProgressSwingWorker(JComponent component, Runnable runnable) {
+  public OverlayProgressSwingWorker(JComponent component, ProgressWorker worker) {
     this.component = component;
-    this.runnable = runnable;
+    this.worker = worker;
     initPopup(component);
   }
 
@@ -130,16 +148,28 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
       popupComponent.add(overplayPanel);
       popupComponent.pack();
       popupComponent.setOpaque(false);
-      if (component.isShowing()) {
-        popupComponent.show(component, 0, 0);
-      }
     }
   }
 
   @Override
   protected Void doInBackground() {
-    runnable.run();
+    if (component.isShowing()) {
+      // start delayed show
+      ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+      scheduler.schedule(this::showPopup, SHOW_DELAY, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+    worker.getWorker().run();
     return null;
+  }
+
+  private void showPopup() {
+    if (worker.getProgress() < (SHOW_DELAY * 100f) / MAX_NOT_SHOWING_PROGRESS) {
+      SwingUtilities.invokeLater(() -> {
+        if (!isDone()) {
+          popupComponent.show(component, 0, 0);
+        }
+      });
+    }
   }
 
   @Override
