@@ -113,23 +113,23 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     Rectangle bounds = component.getBounds();
     originalCursor = component.getCursor();
     if (component.isVisible() && bounds.width != 0 && bounds.height != 0) {
-      AnimatedImage image;
       URL resource;
       if (task.getProgress() == ProgressManager.UNDEFINED_PROGRESS) {
         resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
       } else {
-        resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
+        resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/progress.gif");
       }
+      AnimatedImage image;
       try {
         Image[] frames = ImageUtils.loadFramesFromGif(
             ImageIO.createImageInputStream(Objects.requireNonNull(resource).openStream()));
         image = new ProgressTaskImage(task, frames, 0.2);
+        image.setBackground(new Color(0, 0, 0, 89));
+        image.setOpaque(false);
+        image.start();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      image.setBackground(new Color(0, 0, 0, 89));
-      image.setOpaque(false);
-      image.start();
 
       component.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 

@@ -18,11 +18,16 @@
 package org.eomasters.gui;
 
 import java.awt.Image;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import org.eomasters.utils.ProgressManager;
 import org.eomasters.utils.ProgressTask;
 
 public class ProgressTaskImage extends AnimatedImage {
 
   private final ProgressTask task;
+  private int currentFrameIdx;
+  private int targetFrameIdx;
 
   public ProgressTaskImage(ProgressTask task, Image[] frames) {
     this(task, frames, 1.0);
@@ -31,15 +36,29 @@ public class ProgressTaskImage extends AnimatedImage {
   public ProgressTaskImage(ProgressTask task, Image[] frames, double scaling) {
     super(frames, scaling);
     this.task = task;
+    if (task.getProgress() != ProgressManager.UNDEFINED_PROGRESS) {
+      ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+      scheduler.scheduleAtFixedRate(() -> {
+        if (task.isDone()) {
+          scheduler.shutdown();
+        }
+        int progress = task.getProgress();
+        targetFrameIdx = (int) Math.floor((getNumFrames() - 1) * progress / 100f);
+        if(targetFrameIdx > currentFrameIdx) {
+           currentFrameIdx++;
+        }
+        repaint();
+      }, 0, 50, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
   }
 
   @Override
   protected int getFrameIdx() {
     int progress = task.getProgress();
-    if(progress == -1) {
+    if (progress == ProgressManager.UNDEFINED_PROGRESS) {
       return super.getFrameIdx();
     }
-    return (int) Math.floor((getNumFrames() - 1) * progress / 100f);
+    return currentFrameIdx;
   }
 
 }
