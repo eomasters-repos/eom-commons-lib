@@ -29,7 +29,7 @@ class ProgressManagerTest {
 
   @Test
   void testProgressReporting() {
-    ProgressWorker task1 = ProgressManager.registerTask("task1", 4);
+    ProgressTask task1 = ProgressManager.registerTask("task1", 4);
 
     ProgressManager.worked("task1", 1);
     assertEquals(25, ProgressManager.getProgress("task1"));
@@ -38,7 +38,7 @@ class ProgressManagerTest {
     assertEquals(75, ProgressManager.getProgress("task1"));
 
     ProgressManager.worked("task1", 1);
-    assertThrows(IllegalStateException.class, () -> ProgressManager.getProgress("task1"));
+    assertEquals(-1, ProgressManager.getProgress("task1"));
     assertEquals(100, task1.getProgress());
 
     ProgressManager.done("task1");
@@ -47,7 +47,7 @@ class ProgressManagerTest {
   @Test
   void testProgressDoesNotExceed100() {
     int total = 4;
-    ProgressWorker task1 = ProgressManager.registerTask("task1", total);
+    ProgressTask task1 = ProgressManager.registerTask("task1", total);
 
     ProgressManager.worked("task1", total + 1);
     assertEquals(100, task1.getProgress());
@@ -63,12 +63,12 @@ class ProgressManagerTest {
     assertEquals(25, ProgressManager.getProgress("task1"));
 
     ProgressManager.done("task1");
-    assertThrows(IllegalStateException.class, () -> ProgressManager.getProgress("task1"));
+    assertEquals(-1, ProgressManager.getProgress("task1"));
   }
 
   @Test
   void testProgressReportingForTaskWithUndefinedAmount() {
-    ProgressWorker task1 = ProgressManager.registerTask("task1", -1);
+    ProgressTask task1 = ProgressManager.registerTask("task1", -1);
 
     assertEquals(-1, ProgressManager.getProgress("task1"));
 
@@ -87,14 +87,14 @@ class ProgressManagerTest {
 
   @Test
   void testProgressReportingWithSubTasks() {
-    ProgressWorker task1 = ProgressManager.registerTask("task", 10)
-                                          .with("subtask1", 5)
-                                          .with("subtask2", 2);
+    ProgressTask task1 = ProgressManager.registerTask("task", 10)
+                                        .with("subtask1", 5)
+                                        .with("subtask2", 2);
 
-    ProgressWorker subtask1 = ProgressManager.registerTask("subtask1", 2);
+    ProgressTask subtask1 = ProgressManager.registerTask("subtask1", 2);
     subtask1.worked(1);
 
-    ProgressWorker subtask2 = ProgressManager.registerTask("subtask2", 10);
+    ProgressTask subtask2 = ProgressManager.registerTask("subtask2", 10);
     subtask2.worked(5);
 
     assertEquals(50, subtask1.getProgress());
@@ -112,11 +112,11 @@ class ProgressManagerTest {
 
   @Test
   void testProgressReportingWithSubSubTasks() {
-    ProgressWorker task1 = ProgressManager.registerTask("task", 10)
-                                          .with("subtask1", 5);
-    ProgressWorker subtask1 = ProgressManager.registerTask("subtask1", 5)
-                                             .with("subsubtask1", 2);
-    ProgressWorker subsubtask1 = ProgressManager.registerTask("subsubtask1", 10);
+    ProgressTask task1 = ProgressManager.registerTask("task", 10)
+                                        .with("subtask1", 5);
+    ProgressTask subtask1 = ProgressManager.registerTask("subtask1", 5)
+                                           .with("subsubtask1", 2);
+    ProgressTask subsubtask1 = ProgressManager.registerTask("subsubtask1", 10);
 
     subsubtask1.worked(5);
     assertEquals(50, subsubtask1.getProgress());
@@ -135,22 +135,22 @@ class ProgressManagerTest {
 
   @Test
   void testTaskSpecificListenerNotification() {
-    ProgressWorker task = ProgressManager.registerTask("task", 10)
-                                         .with("subtask1", 5);
-    ProgressWorker subtask1 = ProgressManager.registerTask("subtask1", 5)
-                                             .with("subsubtask1", 2);
-    ProgressWorker subsubtask1 = ProgressManager.registerTask("subsubtask1", 10);
+    ProgressTask task = ProgressManager.registerTask("task", 10)
+                                       .with("subtask1", 5);
+    ProgressTask subtask1 = ProgressManager.registerTask("subtask1", 5)
+                                           .with("subsubtask1", 2);
+    ProgressTask subsubtask1 = ProgressManager.registerTask("subsubtask1", 10);
 
     final AtomicInteger generalProgressCounter = new AtomicInteger();
     final AtomicInteger generalIsDones = new AtomicInteger();
     ProgressListener generalListener = new ProgressListener() {
       @Override
-      public void onProgressChanged(ProgressWorker task) {
+      public void onProgressChanged(ProgressTask task) {
         generalProgressCounter.getAndIncrement();
       }
 
       @Override
-      public void onTaskDone(ProgressWorker task) {
+      public void onTaskDone(ProgressTask task) {
         generalIsDones.getAndIncrement();
       }
     };
@@ -160,12 +160,12 @@ class ProgressManagerTest {
 
     ProgressListener taskListener = new ProgressListener() {
       @Override
-      public void onProgressChanged(ProgressWorker task) {
+      public void onProgressChanged(ProgressTask task) {
         taskProgressCounter.getAndIncrement();
       }
 
       @Override
-      public void onTaskDone(ProgressWorker task) {
+      public void onTaskDone(ProgressTask task) {
         taskIsDone.set(true);
       }
     };
@@ -175,12 +175,12 @@ class ProgressManagerTest {
 
     ProgressListener subsubtaskListener = new ProgressListener() {
       @Override
-      public void onProgressChanged(ProgressWorker task) {
+      public void onProgressChanged(ProgressTask task) {
         subsubtaskProgressCounter.getAndIncrement();
       }
 
       @Override
-      public void onTaskDone(ProgressWorker task) {
+      public void onTaskDone(ProgressTask task) {
         subsubtaskIsDone.set(true);
       }
     };

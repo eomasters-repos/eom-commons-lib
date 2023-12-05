@@ -19,7 +19,7 @@ package org.eomasters.utils;
 
 public interface ProgressListener {
 
-  void onProgressChanged(ProgressWorker task);
+  void onProgressChanged(ProgressTask task);
 
-  void onTaskDone(ProgressWorker task);
+  void onTaskDone(ProgressTask task);
 }

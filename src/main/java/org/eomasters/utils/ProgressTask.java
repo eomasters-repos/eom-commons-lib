@@ -22,9 +22,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class ProgressWorker implements AutoCloseable{
-
-  private static final int UNDEFINED = -1;
+public class ProgressTask implements AutoCloseable{
 
   private final String taskID;
   private String title;
@@ -33,37 +31,37 @@ public class ProgressWorker implements AutoCloseable{
   private final Map<String, Integer> subTaskIDs = new TreeMap<>();
   private final ProgressListener subProgressListener = new ProgressListener() {
     @Override
-    public void onProgressChanged(ProgressWorker task) {
-      ProgressManager.fireProgressChanged(ProgressWorker.this);
+    public void onProgressChanged(ProgressTask task) {
+      ProgressManager.fireProgressChanged(ProgressTask.this);
     }
 
     @Override
-    public void onTaskDone(ProgressWorker task) {
+    public void onTaskDone(ProgressTask task) {
       Integer subWorked = subTaskIDs.remove(task.getTaskID());
       worked += subWorked;
     }
   };
   private boolean done;
-  private Runnable worker;
+  private Runnable runnable;
 
-  ProgressWorker(String taskID, int totalWork) {
+  ProgressTask(String taskID, int totalWork) {
     if (taskID == null || taskID.isEmpty()) {
       throw new IllegalArgumentException("taskID must not be null or empty");
     }
 
     this.taskID = taskID;
     if (totalWork == 0) {
-      throw new IllegalArgumentException("totalWork must be " + UNDEFINED + "(UNDEFINED)) or greater than 0");
+      throw new IllegalArgumentException("totalWork must be " + ProgressManager.UNDEFINED_PROGRESS + "(UNDEFINED)) or greater than 0");
     }
     this.totalWork = totalWork;
   }
 
-  public ProgressWorker with(String title) {
+  public ProgressTask with(String title) {
     setTitle(title);
     return this;
   }
 
-  public ProgressWorker with(String subTaskID, int parentWorkSteps) {
+  public ProgressTask with(String subTaskID, int parentWorkSteps) {
     if (parentWorkSteps > totalWork) {
       throw new IllegalArgumentException("parentWorkSteps must be less than or equal to work of parent task");
     }
@@ -88,32 +86,34 @@ public class ProgressWorker implements AutoCloseable{
     return subTaskIDs.keySet();
   }
 
-  public void setWorker(Runnable worker) {
-    this.worker = worker;
+  public void setRunnable(Runnable runnable) {
+    this.runnable = runnable;
   }
 
-  public Runnable getWorker() {
-    return worker;
+  public Runnable getRunnable() {
+    return runnable;
   }
 
   public void worked(int stepsWorked) {
     this.worked += stepsWorked;
     ProgressManager.fireProgressChanged(this);
-    if (totalWork != UNDEFINED && worked >= totalWork) {
+    if (totalWork != ProgressManager.UNDEFINED_PROGRESS && worked >= totalWork) {
       done();
     }
   }
 
   public int getProgress() {
-    if (totalWork == UNDEFINED) {
-      return UNDEFINED;
+    if (totalWork == ProgressManager.UNDEFINED_PROGRESS) {
+      return ProgressManager.UNDEFINED_PROGRESS;
     }
     float subprogress = 0;
     if (!subTaskIDs.isEmpty()) {
       for (Entry<String, Integer> entry : subTaskIDs.entrySet()) {
         int subTaskProgress = ProgressManager.getProgress(entry.getKey());
-        int parentAmount = entry.getValue();
-        subprogress += (subTaskProgress / 100f) * parentAmount;
+        if (subTaskProgress != ProgressManager.UNDEFINED_PROGRESS) {
+          int parentAmount = entry.getValue();
+          subprogress += (subTaskProgress / 100f) * parentAmount;
+        }
       }
     }
     return Math.min((int) ((worked + subprogress) / totalWork * 100), 100);

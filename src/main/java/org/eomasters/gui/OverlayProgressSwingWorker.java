@@ -45,7 +45,7 @@ import org.eomasters.icons.Icon.SIZE;
 import org.eomasters.icons.Icons;
 import org.eomasters.utils.ImageUtils;
 import org.eomasters.utils.ProgressManager;
-import org.eomasters.utils.ProgressWorker;
+import org.eomasters.utils.ProgressTask;
 
 public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
@@ -65,8 +65,8 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     contentPane.add(overlayed, BorderLayout.CENTER);
     contentPane.add(new JButton("Visible"), BorderLayout.SOUTH);
     progressBtn.addActionListener(e -> {
-      ProgressWorker testWorker = ProgressManager.registerTask("test", 3000);
-      testWorker.setWorker(() -> {
+      ProgressTask testWorker = ProgressManager.registerTask("test", 3000);
+      testWorker.setRunnable(() -> {
         try {
           int time = 1000;
           Thread.sleep(time);
@@ -93,19 +93,19 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
   private static JPopupMenu popupComponent;
   private final JComponent component;
-  private final ProgressWorker worker;
+  private final ProgressTask task;
   private Cursor originalCursor;
 
 
   /**
    * Creates a new swing worker that shows a progress indicator on a glass pane while it is running.
    *
-   * @param component the component which is overlayed with a progress indicator
-   * @param worker    the worker to run
+   * @param component the component which is overlaid with a progress indicator
+   * @param task      the task to run
    */
-  public OverlayProgressSwingWorker(JComponent component, ProgressWorker worker) {
+  public OverlayProgressSwingWorker(JComponent component, ProgressTask task) {
     this.component = component;
-    this.worker = worker;
+    this.task = task;
     initPopup(component);
   }
 
@@ -158,12 +158,12 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
       ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
       scheduler.schedule(this::showPopup, SHOW_DELAY, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
-    worker.getWorker().run();
+    task.getRunnable().run();
     return null;
   }
 
   private void showPopup() {
-    if (worker.getProgress() < (SHOW_DELAY * 100f) / MAX_NOT_SHOWING_PROGRESS) {
+    if (task.getProgress() < (SHOW_DELAY * 100f) / MAX_NOT_SHOWING_PROGRESS) {
       SwingUtilities.invokeLater(() -> {
         if (!isDone()) {
           popupComponent.show(component, 0, 0);

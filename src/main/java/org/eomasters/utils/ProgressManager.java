@@ -26,42 +26,43 @@ public class ProgressManager {
 
   private static final String GENERAL_LISTENER_ID = "";
   private static final ProgressManager instance = new ProgressManager();
+  static final int UNDEFINED_PROGRESS = -1;
 
-  private final TreeMap<String, ProgressWorker> tasks = new TreeMap<>();
+  private final TreeMap<String, ProgressTask> tasks = new TreeMap<>();
   private final HashMap<String, List<ProgressListener>> listenerMap = new HashMap<>();
 
   private ProgressManager() {
     // prevent instantiation
   }
 
-  public static ProgressWorker registerTask(String taskID, int amount) {
-    ProgressWorker task = new ProgressWorker(taskID, amount);
+  public static ProgressTask registerTask(String taskID, int amount) {
+    ProgressTask task = new ProgressTask(taskID, amount);
     instance.tasks.put(taskID, task);
     return task;
   }
 
   public static void worked(String taskID, int steps) {
-    ProgressWorker task = instance.tasks.get(taskID);
+    ProgressTask task = instance.tasks.get(taskID);
     task.worked(steps);
   }
 
   public static void worked(String taskID, String title, int steps) {
-    ProgressWorker task = instance.tasks.get(taskID);
+    ProgressTask task = instance.tasks.get(taskID);
     task.setTitle(title);
     task.worked(steps);
   }
 
   public static int getProgress(String taskID) {
-    ProgressWorker task = instance.tasks.get(taskID);
+    ProgressTask task = instance.tasks.get(taskID);
     if (task != null) {
       return task.getProgress();
     } else {
-      throw new IllegalStateException("Task " + taskID + " is unknown");
+      return UNDEFINED_PROGRESS;
     }
   }
 
   public static void done(String taskID) {
-    try (ProgressWorker remove = instance.tasks.remove(taskID)) {
+    try (ProgressTask remove = instance.tasks.remove(taskID)) {
       if (remove != null) {
         instance.listenerMap.remove(taskID);
         remove.getSubTasks().forEach(instance.listenerMap::remove);
@@ -85,7 +86,7 @@ public class ProgressManager {
     }
   }
 
-  static void fireProgressChanged(ProgressWorker task) {
+  static void fireProgressChanged(ProgressTask task) {
     List<ProgressListener> progressListeners = instance.listenerMap.get(task.getTaskID());
     if (progressListeners != null) {
       progressListeners.forEach(l -> l.onProgressChanged(task));
@@ -96,7 +97,7 @@ public class ProgressManager {
     }
   }
 
-  static void fireTaskDone(ProgressWorker task) {
+  static void fireTaskDone(ProgressTask task) {
     List<ProgressListener> progressListeners = instance.listenerMap.get(task.getTaskID());
     if (progressListeners != null) {
       progressListeners.forEach(l -> l.onTaskDone(task));
