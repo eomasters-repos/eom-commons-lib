@@ -24,10 +24,9 @@ import java.util.TreeMap;
 
 public class ProgressManager {
 
+  public static final int UNDEFINED_PROGRESS = -1;
   private static final String GENERAL_LISTENER_ID = "";
   private static final ProgressManager instance = new ProgressManager();
-  static final int UNDEFINED_PROGRESS = -1;
-
   private final TreeMap<String, ProgressTask> tasks = new TreeMap<>();
   private final HashMap<String, List<ProgressListener>> listenerMap = new HashMap<>();
 

@@ -65,12 +65,21 @@ public class AnimatedImage extends JPanel {
 
     timer = new Timer(delay, e -> {
       repaint();
-      frameIdx = ++frameIdx % frames.length;
     });
 
     Dimension size = new Dimension(Math.round(fWidth), Math.round(fHeight));
     setPreferredSize(size);
     setSize(size);
+  }
+
+  protected int getFrameIdx() {
+    int index = frameIdx % getNumFrames();
+    frameIdx++;
+    return index;
+  }
+
+  protected int getNumFrames() {
+    return frames.length;
   }
 
   public void setScaling(float scaling) {
@@ -110,7 +119,7 @@ public class AnimatedImage extends JPanel {
   }
 
   private void paintImage(Graphics2D g) {
-    g.drawImage(frames[frameIdx], createTransform(), null);
+    g.drawImage(frames[getFrameIdx()], createTransform(), null);
   }
 
   private AffineTransform createTransform() {

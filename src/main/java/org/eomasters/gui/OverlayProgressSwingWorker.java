@@ -65,7 +65,7 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     contentPane.add(overlayed, BorderLayout.CENTER);
     contentPane.add(new JButton("Visible"), BorderLayout.SOUTH);
     progressBtn.addActionListener(e -> {
-      ProgressTask testWorker = ProgressManager.registerTask("test", 3000);
+      ProgressTask testWorker = ProgressManager.registerTask("test", 2500);
       testWorker.setRunnable(() -> {
         try {
           int time = 1000;
@@ -114,11 +114,16 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     originalCursor = component.getCursor();
     if (component.isVisible() && bounds.width != 0 && bounds.height != 0) {
       AnimatedImage image;
+      URL resource;
+      if (task.getProgress() == ProgressManager.UNDEFINED_PROGRESS) {
+        resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
+      } else {
+        resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
+      }
       try {
-        URL resource = OverlayProgressSwingWorker.class.getResource("/icons/progress/indefinite.gif");
         Image[] frames = ImageUtils.loadFramesFromGif(
             ImageIO.createImageInputStream(Objects.requireNonNull(resource).openStream()));
-        image = new AnimatedImage(frames, 0.2);
+        image = new ProgressTaskImage(task, frames, 0.2);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
