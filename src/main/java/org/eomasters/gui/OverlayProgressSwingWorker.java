@@ -94,7 +94,6 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
   private static JPopupMenu popupComponent;
   private final JComponent component;
   private final ProgressTask task;
-  private Cursor originalCursor;
 
 
   /**
@@ -111,7 +110,6 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
   private void initPopup(JComponent component) {
     Rectangle bounds = component.getBounds();
-    originalCursor = component.getCursor();
     if (component.isVisible() && bounds.width != 0 && bounds.height != 0) {
       URL resource;
       if (task.getProgress() == ProgressManager.UNDEFINED_PROGRESS) {
@@ -131,8 +129,6 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
         throw new RuntimeException(e);
       }
 
-      component.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
       JPanel overplayPanel = new JPanel(new BorderLayout());
       overplayPanel.setPreferredSize(component.getSize());
       overplayPanel.setBorder(component.getBorder());
@@ -146,9 +142,7 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
           // override to prevent the popup from closing when the mouse is clicked outside the popup
         }
       };
-
-      sizeListener = new SyncComponentSizeListener();
-      component.addComponentListener(sizeListener);
+      popupComponent.setCursor(new Cursor(Cursor.WAIT_CURSOR));
       popupComponent.setBorder(BorderFactory.createEmptyBorder());
       popupComponent.add(overplayPanel);
       popupComponent.pack();
@@ -159,6 +153,8 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
   @Override
   protected Void doInBackground() {
     if (component.isShowing()) {
+      sizeListener = new SyncComponentSizeListener();
+      component.addComponentListener(sizeListener);
       // start delayed show
       ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
       scheduler.schedule(this::showPopup, SHOW_DELAY, java.util.concurrent.TimeUnit.MILLISECONDS);
@@ -179,10 +175,9 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
   @Override
   protected void done() {
-    component.setCursor(originalCursor);
+    component.removeComponentListener(sizeListener);
     if (popupComponent != null) {
       popupComponent.setVisible(false);
-      component.removeComponentListener(sizeListener);
     }
   }
 
