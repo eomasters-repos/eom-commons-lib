@@ -15,19 +15,22 @@
  * =========================LICENSE_END==================================
  */
 
-package org.eomasters.utils;
+package org.eomasters.audio;
 
-/**
- * Exception thrown when an audio input stream cannot be played.
- */
-public class AudioException extends Exception {
+import java.io.InputStream;
 
-  /**
-   * Creates a new audio exception.
-   *
-   * @param e the cause exception
-   */
-  public AudioException(Exception e) {
-    super(e);
+public class Audio {
+
+  private final InputStream inputStream;
+
+  public Audio(InputStream inputStream) {
+    this.inputStream = inputStream;
+  }
+
+  public void play()  {
+    try {
+      Audios.play(inputStream);
+    } catch (AudioException ignore) {
+    }
   }
 }
