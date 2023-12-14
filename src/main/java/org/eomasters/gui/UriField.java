@@ -28,7 +28,6 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.net.URI;
 import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -107,7 +106,6 @@ public class UriField extends JPanel {
   public UriField(String uri, String label) {
     this.uri = uri;
     this.label = label;
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     cards = new CardLayout();
     setLayout(cards);
 
