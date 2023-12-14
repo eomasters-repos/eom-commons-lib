@@ -76,7 +76,7 @@ public class CollapsiblePanel extends JPanel {
 
     add(titlePanel, BorderLayout.NORTH);
 
-    contentPanel = new JPanel(new MigLayout("fill, insets 0"));
+    contentPanel = new JPanel(new MigLayout("fill, insets 0, hidemode 3"));
     add(contentPanel, BorderLayout.CENTER);
 
     doLayout();
@@ -150,11 +150,9 @@ public class CollapsiblePanel extends JPanel {
     if (collapse) {
       toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(SIZE.S16));
       contentPanel.setVisible(false);
-      setPreferredSize(new Dimension(getSize().width, getCollapsedHeight()));
     } else {
       toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(SIZE.S16));
       contentPanel.setVisible(true);
-      setPreferredSize(null);
     }
     revalidate();
   }
@@ -169,10 +167,6 @@ public class CollapsiblePanel extends JPanel {
       exporter.save(outputStream -> outputStream.write(textArea.getText().getBytes(StandardCharsets.UTF_8)));
     });
     return exportBtn;
-  }
-
-  private int getCollapsedHeight() {
-    return getInsets().top + titlePanel.getSize().height;
   }
 
   /**
