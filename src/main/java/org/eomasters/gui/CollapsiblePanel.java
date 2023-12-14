@@ -17,6 +17,7 @@
 
 package org.eomasters.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -54,9 +55,9 @@ public class CollapsiblePanel extends JPanel {
    * @param title the title
    */
   public CollapsiblePanel(String title) {
-    super(new MigLayout("top, left, insets 0, gap 5"));
+    super(new BorderLayout(5, 5));
     setName("CollapsiblePanel." + title.replaceAll(" ", "_"));
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
     MouseAdapter collapser = new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -64,7 +65,7 @@ public class CollapsiblePanel extends JPanel {
       }
     };
 
-    titlePanel = new JPanel(new MigLayout("flowx, insets 5 0 5 0", "[][fill, grow, push]"));
+    titlePanel = new JPanel(new MigLayout("flowx, insets 5 0 5 0", "[][fill, grow]"));
     titlePanel.addMouseListener(collapser);
     JLabel titleLabel = new JLabel(title);
     titleLabel.addMouseListener(collapser);
@@ -73,52 +74,14 @@ public class CollapsiblePanel extends JPanel {
     toggleLabel.addMouseListener(collapser);
     titlePanel.add(toggleLabel, "top, left");
 
-    add(titlePanel, "top, left, wrap");
+    add(titlePanel, BorderLayout.NORTH);
 
-    contentPanel = new JPanel(new MigLayout("insets 0, fill", "[fill, grow, push]"));
-    add(contentPanel, "wrap");
+    contentPanel = new JPanel(new MigLayout("fill, insets 0"));
+    add(contentPanel, BorderLayout.CENTER);
 
     doLayout();
 
     setCollapsed(true);
-  }
-
-  /**
-   * Sets the content of this panel which can be collapsed.
-   *
-   * @param content the content
-   */
-  public void setContent(JComponent content) {
-    contentPanel.removeAll();
-    contentPanel.add(content, "top, left");
-    contentPanel.invalidate();
-  }
-
-  @Override
-  public void revalidate() {
-    super.revalidate();
-    Window windowAncestor = SwingUtilities.getWindowAncestor(this);
-    if (windowAncestor != null) {
-      windowAncestor.pack();
-    }
-  }
-
-  /**
-   * Sets the collapsed state of this panel.
-   *
-   * @param collapse true to collapse, false to expand
-   */
-  public void setCollapsed(boolean collapse) {
-    if (collapse) {
-      toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(SIZE.S16));
-      contentPanel.setVisible(false);
-      setPreferredSize(new Dimension(getPreferredSize().width, getCollapsedHeight()));
-    } else {
-      toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(SIZE.S16));
-      contentPanel.setVisible(true);
-      setPreferredSize(null);
-    }
-    revalidate();
   }
 
   /**
@@ -158,6 +121,45 @@ public class CollapsiblePanel extends JPanel {
     return collapsiblePanel;
   }
 
+  /**
+   * Sets the content of this panel which can be collapsed.
+   *
+   * @param content the content
+   */
+  public void setContent(JComponent content) {
+    contentPanel.removeAll();
+    contentPanel.add(content, "grow, pushx");
+    contentPanel.invalidate();
+  }
+
+  @Override
+  public void revalidate() {
+    super.revalidate();
+    Window windowAncestor = SwingUtilities.getWindowAncestor(this);
+    if (windowAncestor != null) {
+      windowAncestor.pack();
+    }
+  }
+
+  /**
+   * Sets the collapsed state of this panel.
+   *
+   * @param collapse true to collapse, false to expand
+   */
+  public void setCollapsed(boolean collapse) {
+    if (collapse) {
+      toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(SIZE.S16));
+      contentPanel.setVisible(false);
+      setPreferredSize(new Dimension(getSize().width, getCollapsedHeight()));
+    } else {
+      toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(SIZE.S16));
+      contentPanel.setVisible(true);
+      setPreferredSize(null);
+    }
+    revalidate();
+  }
+
+  // TODO: move to FileIo
   private static JButton createExportButton(JPanel contentPane, JTextArea textArea) {
     JButton exportBtn = new JButton("Export to File");
     exportBtn.addActionListener(e -> {
