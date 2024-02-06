@@ -62,7 +62,8 @@ public class GlobalGrid {
 
   /**
    * Creates a new global grid with the specified cell size.
-   * @param cellWidth the width of each cell in degrees of longitude
+   *
+   * @param cellWidth  the width of each cell in degrees of longitude
    * @param cellHeight the height of each cell in degrees of latitude
    */
   public GlobalGrid(int cellWidth, int cellHeight) {
@@ -148,6 +149,22 @@ public class GlobalGrid {
       sb.append("E");
     }
     return sb.append(String.format("%03d", Math.abs(cellId.x))).toString();
+  }
+
+  public List<Point> getIntersectedCells(double minX, double minY, double maxX, double maxY) {
+    List<Point> cellIds = new ArrayList<>();
+    Point ulCellId = getCellId(Math.max(minX, WEST_BOUND), Math.min(maxY, northBound));
+    Point lrCellId = getCellId(Math.min(maxX, EAST_BOUND - cellWidth / 2.0), Math.max(minY, southBound));
+    minX = ulCellId.x;
+    maxY = ulCellId.y;
+    maxX = lrCellId.x;
+    minY = lrCellId.y;
+    for (int lat = (int) Math.ceil(maxY); lat >= (int) Math.floor(minY); lat -= cellHeight) {
+      for (int lon = (int) Math.floor(minX); lon <= (int) Math.ceil(maxX); lon += cellWidth) {
+        cellIds.add(new Point(lon, lat));
+      }
+    }
+    return cellIds;
   }
 
   public List<Point> getGlobalCellIdStripe(int lonStart, int lonWidth) {

@@ -20,6 +20,7 @@ package org.eomasters.geo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.awt.Point;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GlobalGridTest {
@@ -111,6 +112,30 @@ class GlobalGridTest {
     assertEquals(6, cells.length);
     assertEquals(new Point(0, -84), cells[0]);
     assertEquals(new Point(6, -87), cells[cells.length - 1]);
+  }
+
+  @Test
+  void getIntersectedCells_3degree() {
+    GlobalGrid grid = new GlobalGrid();
+    List<Point> cells = grid.getIntersectedCells(-180, -90, 180, 90);
+    assertEquals(360 / 3 * 180 / 3, cells.size());
+    assertEquals(new Point(-180, 90), cells.get(0));
+    assertEquals(new Point(177, -87), cells.get(cells.size() - 1));
+
+    cells = grid.getIntersectedCells(-4, -35, 2, -30);
+    assertEquals(6, cells.size());
+    assertEquals(new Point(-6, -30), cells.get(0));
+    assertEquals(new Point(0, -33), cells.get(cells.size() - 1));
+  }
+
+  @Test
+  void getIntersectedCells_20degree() {
+    GlobalGrid grid = new GlobalGrid(20, 20);
+    grid.setGridBounds(60, -60);
+    List<Point> cells = grid.getIntersectedCells(-180, -90, 180, 90);
+    assertEquals(108, cells.size());
+    assertEquals(new Point(-180, 60), cells.get(0));
+    assertEquals(new Point(160, -40), cells.get(cells.size() - 1));
   }
 
   @Test
