@@ -279,10 +279,12 @@ public class GlobalGrid {
    */
   public Point getCellId(double lon, double lat) {
     // consider the hal-pixel offset which is already in the adjacent cell
-    if (lat % cellHeight < (pixelSize / 2)) {
+    double latRemaining = Math.abs(lat % cellHeight);
+    if (latRemaining > 0 && latRemaining < (pixelSize / 2)) {
       lat = lat - (pixelSize / 2);
     }
-    if (lon % cellWidth < (pixelSize / 2)) {
+    double lonRemaining = Math.abs(lon % cellWidth);
+    if (lonRemaining > 0 && lonRemaining < (pixelSize / 2)) {
       lon = lon + (pixelSize / 2);
     }
     // convert longitude to range -180 to 180, so that it wraps around the globe
