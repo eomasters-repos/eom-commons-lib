@@ -27,7 +27,7 @@ class GlobalGridTest {
 
   @Test
   void testGetTilePosition() {
-    GlobalGrid grid = new GlobalGrid();
+    GlobalGrid grid = new GlobalGrid(3, 3, 3 / 36000.0);
     assertEquals(new Point(-180, 90), grid.getCellId(-180, 90));
     assertEquals(new Point(-180, 90), grid.getCellId(-178, 90));
     assertEquals(new Point(-180, -81), grid.getCellId(180, -82));
@@ -38,7 +38,7 @@ class GlobalGridTest {
 
   @Test
   void testGetAllIds_global() {
-    GlobalGrid grid = new GlobalGrid();
+    GlobalGrid grid = new GlobalGrid(3, 3, 3 / 36000.0);
     Point[] cells = grid.getAllIds();
     assertEquals(360 / 3 * 180 / 3, cells.length);
     assertEquals(new Point(-180, 90), cells[0]);
@@ -47,7 +47,7 @@ class GlobalGridTest {
 
   @Test
   void testGetAllIds_withBounds() {
-    GlobalGrid grid = new GlobalGrid(20, 20);
+    GlobalGrid grid = new GlobalGrid(20, 20,1);
     grid.setGridBounds(60, -60);
     Point[] cells = grid.getAllIds();
     assertEquals(108, cells.length);
@@ -57,7 +57,7 @@ class GlobalGridTest {
 
   @Test
   void createSurroundingCellIds_byId() {
-    GlobalGrid grid = new GlobalGrid();
+    GlobalGrid grid = new GlobalGrid(3, 3, 3 / 36000.0);
     Point[] cells = grid.getSurroundingCellIds(new Point(0, 0));
     assertEquals(9, cells.length);
     assertEquals(new Point(-3, 3), cells[0]);
@@ -97,7 +97,7 @@ class GlobalGridTest {
 
   @Test
   void createSurroundingCellIds_byGeo() {
-    GlobalGrid grid = new GlobalGrid();
+    GlobalGrid grid = new GlobalGrid(3, 3, 3 / 36000.0);
     Point[] cells = grid.getSurroundingCellIds(15, 39);
     assertEquals(9, cells.length);
     assertEquals(new Point(12, 42), cells[0]);
@@ -115,8 +115,20 @@ class GlobalGridTest {
   }
 
   @Test
+  void testGetCellIdAtTheEdgesWithPixelSize() {
+    GlobalGrid grid = new GlobalGrid(3, 3, 3/36000.0);
+    Point cellId;
+    // the cell is of size 36000x36000 pixels
+    // the following location is actually already in the adjacent 57 cell and not anymore in the 60 cell
+    cellId = grid.getCellId(-120, 57.000018);
+    assertEquals(new Point(-120, 57), cellId);
+    cellId = grid.getCellId(-117.000018, 57.000018);
+    assertEquals(new Point(-117, 57), cellId);
+  }
+
+  @Test
   void getIntersectedCells_3degree() {
-    GlobalGrid grid = new GlobalGrid();
+    GlobalGrid grid = new GlobalGrid(3, 3, 3 / 36000.0);
     List<Point> cells = grid.getIntersectedCells(-180, -90, 180, 90);
     assertEquals(360 / 3 * 180 / 3, cells.size());
     assertEquals(new Point(-180, 90), cells.get(0));
@@ -130,7 +142,7 @@ class GlobalGridTest {
 
   @Test
   void getIntersectedCells_20degree() {
-    GlobalGrid grid = new GlobalGrid(20, 20);
+    GlobalGrid grid = new GlobalGrid(20, 20, 1);
     grid.setGridBounds(60, -60);
     List<Point> cells = grid.getIntersectedCells(-180, -90, 180, 90);
     assertEquals(108, cells.size());

@@ -29,20 +29,17 @@ import java.util.Set;
  * Each grid cell is identified by the upper left corner of the cell. The cell identifier is a Point object with the x
  * coordinate representing the longitude and the y coordinate representing the latitude.
  * </p>
+ * <p>
  * The grid starts in the upper left corner and proceeds to the right and then down. The first cell is at -180 degrees
  * of longitude and 90 degrees (default) of latitude. The second cell is at -177 degrees of longitude and 90 degrees of
  * latitude.
- * <p>
- * The size of each cell is defined by the cellWidth and cellHeight parameters. The default size is 3 degrees of
- * longitude by 3 degrees of latitude.
  * </p>
  */
 public class GlobalGrid {
 
-  private static final int DEFAULT_CELL_WIDTH = 3;
-  private static final int DEFAULT_CELL_HEIGHT = 3;
   private final int cellWidth;
   private final int cellHeight;
+  private final double pixelSize;
   private int northBound;
   private int southBound;
   private final static int NORTH_BOUND = 90;
@@ -51,40 +48,67 @@ public class GlobalGrid {
   private final static int EAST_BOUND = 180;
 
   /**
-   * Creates a new global grid. The grid spans 360 degrees of longitude and 180 degrees of latitude. The upper left
-   * corner of the grid is -180 degrees of longitude and 90 degrees of latitude. The lower right corner of the grid is
-   * 180 degrees of longitude and -90 degrees of latitude. The longitude value 180 is considered to be equivalent to
-   * -180. The cell size is 3 degrees of longitude by 3 degrees of latitude.
-   */
-  public GlobalGrid() {
-    this(DEFAULT_CELL_WIDTH, DEFAULT_CELL_HEIGHT);
-  }
-
-  /**
-   * Creates a new global grid with the specified cell size.
+   * Creates a new global grid with the specified cell size. The grid spans 360 degrees of longitude and 180 degrees of
+   * latitude. The upper left corner of the grid is -180 degrees of longitude and 90 degrees of latitude. The lower
+   * right corner of the grid is 180 degrees of longitude and -90 degrees of latitude. The longitude value 180 is
+   * considered to be equivalent to -180.
    *
    * @param cellWidth  the width of each cell in degrees of longitude
    * @param cellHeight the height of each cell in degrees of latitude
+   * @param pixelSize  the size of each pixel in degrees of longitude
    */
-  public GlobalGrid(int cellWidth, int cellHeight) {
+  public GlobalGrid(int cellWidth, int cellHeight, double pixelSize) {
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
+    this.pixelSize = pixelSize;
     setGridBounds(NORTH_BOUND, SOUTH_BOUND);
   }
 
+  /**
+   * Sets the bounds of the grid. The bounds are specified as the northern and southern latitude limits of the grid.
+   *
+   * @param north the northern latitude limit
+   * @param south the southern latitude limit
+   */
   public void setGridBounds(int north, int south) {
     this.northBound = north;
     this.southBound = south;
   }
 
-  public static Point getCellID(GlobalGrid intertidalGrid, int lon, int lat) {
-    if (intertidalGrid.isInGridBounds(lon, lat)) {
-      return intertidalGrid.getCellId(lon, lat);
+  /**
+   * Returns the cell identifier for the cell which contains the provided latitude and longitude. The cell identifier is
+   * a Point object with the x coordinate representing the longitude and the y coordinate representing the latitude. If
+   * the provided latitude and longitude are outside the grid bounds, null is returned.
+   *
+   * @param grid the grid
+   * @param lon  the longitude
+   * @param lat  the latitude
+   * @return a Point object representing the cell identifier
+   */
+  public static Point getCellID(GlobalGrid grid, int lon, int lat) {
+    if (grid.isInGridBounds(lon, lat)) {
+      return grid.getCellId(lon, lat);
     } else {
       return null;
     }
   }
 
+  /**
+   * Parses a cell identifier string and returns a Point object representing the cell identifier. The cell identifier is
+   * a Point object with the x coordinate representing the longitude and the y coordinate representing the latitude.
+   * <p>
+   * The cell identifier is formatted as follows:
+   * <ul>
+   *   <li>the latitude is prefixed with "N" or "S" depending on whether it is positive or negative</li>
+   *   <li>the latitude is formatted as a two digit number with leading zeros</li>
+   *   <li>the longitude is prefixed with "E" or "W" depending on whether it is positive or negative</li>
+   *   <li>the longitude is formatted as a three digit number with leading zeros</li>
+   * </ul>
+   *
+   * @param cellString the cell identifier to be parsed
+   * @return a Point object representing the cell identifier
+   * @throws IllegalArgumentException if the cell identifier is not 7 characters long
+   */
   public static Point parseCellId(String cellString) {
     if (cellString.length() != 7) {
       throw new IllegalArgumentException("Cell identifier must be 7 characters long");
@@ -100,20 +124,49 @@ public class GlobalGrid {
     return new Point(lon, lat);
   }
 
+  /**
+   * Returns the width of the grid in longitude degrees.
+   *
+   * @return the width of the grid in longitude degrees
+   */
   public int getGridWidth() {
     return 360;
   }
 
+  /**
+   * Returns the height of the grid in latitude degrees.
+   *
+   * @return the height of the grid in latitude degrees
+   */
   public int getGridHeight() {
     return (northBound + 90) - (southBound + 90);
   }
 
+  /**
+   * Returns the width of a cell in degrees.
+   *
+   * @return the width of a cell in degrees
+   */
   public double getCellWidth() {
     return cellWidth;
   }
 
+  /**
+   * Returns the height of a cell in degrees.
+   *
+   * @return the height of a cell in degrees
+   */
   public double getCellHeight() {
     return cellHeight;
+  }
+
+  /**
+   * Returns the size of a pixel in degrees.
+   *
+   * @return the size of a pixel in degrees
+   */
+  public double getPixelSize() {
+    return pixelSize;
   }
 
   public boolean isInGridBounds(double lon, double lat) {
@@ -151,6 +204,16 @@ public class GlobalGrid {
     return sb.append(String.format("%03d", Math.abs(cellId.x))).toString();
   }
 
+  /**
+   * Returns a list of cell identifiers for the cells intersected by the provided bounding box. The cell identifiers are
+   * ordered from the upper left corner to the lower right corner.
+   *
+   * @param minX the minimum longitude of the bounding box
+   * @param minY the minimum latitude of the bounding box
+   * @param maxX the maximum longitude of the bounding box
+   * @param maxY the maximum latitude of the bounding box
+   * @return a list of cell identifiers for the cells intersected by the bounding box
+   */
   public List<Point> getIntersectedCells(double minX, double minY, double maxX, double maxY) {
     List<Point> cellIds = new ArrayList<>();
     Point ulCellId = getCellId(Math.max(minX, WEST_BOUND), Math.min(maxY, northBound));
@@ -167,10 +230,28 @@ public class GlobalGrid {
     return cellIds;
   }
 
+  /**
+   * Returns a list of cell identifiers for the cells intersected by the bounding box defined by the provided longitude
+   * start and width. In latitude the bounding box spans from the northern to the southern bound of the grid.
+   *
+   * @param lonStart the start longitude
+   * @param lonWidth the width of the bounding box
+   * @return a list of cell identifiers for the cells intersected by the bounding box
+   */
   public List<Point> getGlobalCellIdStripe(int lonStart, int lonWidth) {
     return getGlobalCellIdStripe(lonStart, lonWidth, northBound);
   }
 
+  /**
+   * Returns a list of cell identifiers for the cells intersected by the bounding box defined by the provided longitude
+   * start and width and the latitude start. The latitude width spans from <code>startLat</code> to the southern bound
+   * of the grid.
+   *
+   * @param lonStart the start longitude
+   * @param lonWidth the width of the bounding box
+   * @param startLat the start latitude
+   * @return a list of cell identifiers for the cells intersected by the bounding box
+   */
   public List<Point> getGlobalCellIdStripe(int lonStart, int lonWidth, int startLat) {
     List<Point> cellIds = new ArrayList<>();
     startLat = Math.min(startLat, northBound);
@@ -197,6 +278,13 @@ public class GlobalGrid {
    * @see #isInGridBounds(double, double)
    */
   public Point getCellId(double lon, double lat) {
+    // consider the hal-pixel offset which is already in the adjacent cell
+    if (lat % cellHeight < (pixelSize / 2)) {
+      lat = lat - (pixelSize / 2);
+    }
+    if (lon % cellWidth < (pixelSize / 2)) {
+      lon = lon + (pixelSize / 2);
+    }
     // convert longitude to range -180 to 180, so that it wraps around the globe
     lon = normalizeLon(lon);
     // convert latitude to range -90 to 90, so that it is clipped at the poles
@@ -236,7 +324,14 @@ public class GlobalGrid {
     return cellPositions;
   }
 
-  Point[] getSurroundingCellIds(double lon, double lat) {
+  /**
+   * Returns an array of the cell positions surrounding the given longitude and latitude.
+   *
+   * @param lon the longitude
+   * @param lat the latitude
+   * @return an array of cell ids
+   */
+  public Point[] getSurroundingCellIds(double lon, double lat) {
     if (!isInGridBounds(lon, lat)) {
       throw new IllegalArgumentException(
           String.format("Cell-X must be between %d and %d, Cell-Y must be between %d and %d",
