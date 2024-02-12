@@ -25,15 +25,17 @@ public final class Additions {
   /**
    * The eye addition for icons.
    */
-  public static final Icon EYE = new RasterIcon("/icons/" + "additions/Eye_addition");
+  public static final Icon EYE = new RasterIcon("/icons/" + "additions/Eye_addition", Additions.class);
+
   /**
    * The Minus addition for icons.
    */
-  public static final Icon MINUS = new RasterIcon("/icons/" + "additions/Minus_addition");
+  public static final Icon MINUS = new RasterIcon("/icons/" + "additions/Minus_addition", Additions.class);
+
   /**
    * The Plus addition for icons.
    */
-  public static final Icon PLUS = new RasterIcon("/icons/" + "additions/Plus_addition");
+  public static final Icon PLUS = new RasterIcon("/icons/" + "additions/Plus_addition", Additions.class);
 
   private Additions() {
   }

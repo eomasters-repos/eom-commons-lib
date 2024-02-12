@@ -25,14 +25,14 @@ import org.eomasters.utils.ImageUtils;
 
 public class SvgIcon extends Icon {
 
-  public SvgIcon(String name) {
-    super(name);
+  public SvgIcon(String path, Class<?> loadingClass) {
+    super(path, loadingClass);
   }
 
   @Override
   protected ImageIcon createIcon(SIZE size) {
     try {
-      InputStream resource = Icons.class.getResourceAsStream(getPath() + ".svg");
+      InputStream resource = getClassLoader().getResourceAsStream(getPath() + ".svg");
       return new ImageIcon(ImageUtils.loadSvgImage(resource, size.getSize(), size.getSize()));
     } catch (IOException e) {
       return new ImageIcon(new BufferedImage(size.getSize(), size.getSize(), BufferedImage.TYPE_INT_ARGB));

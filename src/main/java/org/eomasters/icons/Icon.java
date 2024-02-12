@@ -24,14 +24,24 @@ import javax.swing.ImageIcon;
 
 public abstract class Icon {
 
-  protected final String path;
+  private final String path;
+  private final ClassLoader classLoader;
 
-  public Icon(String path) {
+  protected Icon(String path) {
+    this(path, Icon.class);
+  }
+
+  public Icon(String path, Class<?> loadingClass) {
     this.path = path;
+    this.classLoader = loadingClass.getClassLoader();
   }
 
   public String getPath() {
     return path;
+  }
+
+  public ClassLoader getClassLoader() {
+    return classLoader;
   }
 
   public ImageIcon getImageIcon(SIZE size) {

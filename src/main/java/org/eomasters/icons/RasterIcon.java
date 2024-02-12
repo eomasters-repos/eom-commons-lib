@@ -28,15 +28,16 @@ public class RasterIcon extends Icon {
   /**
    * Creates a new Icon with the given base path without size and file extension.
    *
-   * @param path the base path
+   * @param path        the base path
+   * @param loadingClass a class which is used to load the icon resource with the provided path
    */
-  public RasterIcon(String path) {
-    super(path);
+  public RasterIcon(String path, Class<?> loadingClass) {
+    super(path, loadingClass);
   }
 
   @Override
   protected ImageIcon createIcon(SIZE size) {
-    URL resource = Icons.class.getResource(getPath() + "_" + size.getSize() + ".png");
+    URL resource = getClassLoader().getResource(getPath() + "_" + size.getSize() + ".png");
     if (resource == null) {
       throw new IllegalStateException("Icon '" + getPath() + "' with size " + size.getSize() + " not found.");
     }
