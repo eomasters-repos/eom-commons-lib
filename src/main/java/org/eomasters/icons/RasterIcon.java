@@ -37,7 +37,7 @@ public class RasterIcon extends Icon {
 
   @Override
   protected ImageIcon createIcon(SIZE size) {
-    URL resource = getClassLoader().getResource(getPath() + "_" + size.getSize() + ".png");
+    URL resource = getLoadingClass().getResource(getPath() + "_" + size.getSize() + ".png");
     if (resource == null) {
       throw new IllegalStateException("Icon '" + getPath() + "' with size " + size.getSize() + " not found.");
     }

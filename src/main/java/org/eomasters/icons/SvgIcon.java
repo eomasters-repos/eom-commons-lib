@@ -32,7 +32,7 @@ public class SvgIcon extends Icon {
   @Override
   protected ImageIcon createIcon(SIZE size) {
     try {
-      InputStream resource = getClassLoader().getResourceAsStream(getPath() + ".svg");
+      InputStream resource = getLoadingClass().getResourceAsStream(getPath() + ".svg");
       return new ImageIcon(ImageUtils.loadSvgImage(resource, size.getSize(), size.getSize()));
     } catch (IOException e) {
       return new ImageIcon(new BufferedImage(size.getSize(), size.getSize(), BufferedImage.TYPE_INT_ARGB));

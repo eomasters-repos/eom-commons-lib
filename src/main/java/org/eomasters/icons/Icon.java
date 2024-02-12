@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 public abstract class Icon {
 
   private final String path;
-  private final ClassLoader classLoader;
+  private final Class<?> loadingClass;
 
   protected Icon(String path) {
     this(path, Icon.class);
@@ -33,15 +33,15 @@ public abstract class Icon {
 
   public Icon(String path, Class<?> loadingClass) {
     this.path = path;
-    this.classLoader = loadingClass.getClassLoader();
+    this.loadingClass = loadingClass;
   }
 
   public String getPath() {
     return path;
   }
 
-  public ClassLoader getClassLoader() {
-    return classLoader;
+  protected Class<?> getLoadingClass() {
+    return loadingClass;
   }
 
   public ImageIcon getImageIcon(SIZE size) {
