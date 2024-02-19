@@ -33,7 +33,7 @@ public class SwingUtils {
     }
   }
 
-  private void updatePreferredWidth(JComponent component, int width) {
+  public static void updatePreferredWidth(JComponent component, int width) {
     Dimension preferredSize = component.getPreferredSize();
     preferredSize.width = width;
     component.setPreferredSize(preferredSize);
