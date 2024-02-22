@@ -27,7 +27,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.net.URI;
-import java.util.Map;
+import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -115,7 +115,8 @@ public class UriField extends JPanel {
     viewField.setEditable(false);
     viewField.setToolTipText("Click to open link");
     viewField.setFont(
-        UIManager.getFont("TextField.font").deriveFont(Map.of(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
+        UIManager.getFont("TextField.font")
+                 .deriveFont(Collections.singletonMap(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)));
     MouseHandler mouseHandler = new MouseHandler(this);
     viewField.addMouseListener(mouseHandler);
     viewField.addMouseMotionListener(mouseHandler);

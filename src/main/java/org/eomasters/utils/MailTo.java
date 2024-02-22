@@ -17,6 +17,7 @@
 
 package org.eomasters.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -74,13 +75,17 @@ public class MailTo {
    *
    * @param subject the subject text
    * @return this instance
-   * @throws MailToException if the subject is too long
+   * @throws MailToException if the subject is too long or the subject text could not be encoded
    */
   public MailTo subject(String subject) throws MailToException {
     if (subject.length() > MAX_SUBJECT_LENGTH) {
       throw new MailToException("Subject must be less than " + MAX_SUBJECT_LENGTH + " characters");
     }
-    this.subject = encodeText(subject);
+    try {
+      this.subject = encodeText(subject);
+    } catch (UnsupportedEncodingException e) {
+      throw new MailToException("Not able to encode subject text", e);
+    }
     return this;
   }
 
@@ -90,13 +95,17 @@ public class MailTo {
    *
    * @param body the body text
    * @return this instance
-   * @throws MailToException if the body is too long
+   * @throws MailToException if the body is too long or the body text could not be encoded
    */
   public MailTo body(String body) throws MailToException {
     if (body.length() > MAX_BODY_LENGTH) {
       throw new MailToException("Body must be less than " + MAX_BODY_LENGTH + " characters");
     }
-    this.body = encodeText(body);
+    try {
+      this.body = encodeText(body);
+    } catch (UnsupportedEncodingException e) {
+      throw new MailToException("Not able to encode body text", e);
+    }
     return this;
   }
 
@@ -129,8 +138,8 @@ public class MailTo {
     return URI.create(mailToString);
   }
 
-  private String encodeText(String body) {
-    String encoded = URLEncoder.encode(body, StandardCharsets.UTF_8);
+  private String encodeText(String text) throws UnsupportedEncodingException {
+    String encoded = URLEncoder.encode(text, StandardCharsets.UTF_8.name());
     return encoded.replace("+", "%20");
   }
 
@@ -142,7 +151,7 @@ public class MailTo {
     if (optional.isPresent()) {
       throw new MailToException("Invalid email address: '" + optional.get() + "'");
     }
-    return addressList.toArray(String[]::new);
+    return addressList.toArray(new String[]{});
   }
 
   /**
@@ -167,6 +176,16 @@ public class MailTo {
      */
     public MailToException(String message) {
       super(message);
+    }
+
+    /**
+     * Creates a new MailToException with the given message and cause.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
+    public MailToException(String message, Exception cause) {
+      super(message, cause);
     }
 
   }

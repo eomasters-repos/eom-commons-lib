@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.eomasters.utils.FileSharingService.UploadResponse;
 
 /**
@@ -84,7 +85,7 @@ public final class FileSharing {
    */
   public static void main(String[] args) throws IOException {
     // Call the uploadFile method and get the response as a string
-    Path path = Path.of("src/main/resources/org/eomasters/eomtbx/docs/toc.xml").toAbsolutePath();
+    Path path = Paths.get("src/main/resources/org/eomasters/eomtbx/docs/toc.xml").toAbsolutePath();
     UploadResponse response = FileSharing.uploadFile(path);
     // Print the response
     System.out.println(response);

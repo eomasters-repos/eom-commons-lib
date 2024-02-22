@@ -20,7 +20,6 @@ package org.eomasters.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -42,7 +41,9 @@ public class MultiStateButton extends JPanel {
   private static DefaultListModel<State> createModel(State initial, State[] other) {
     DefaultListModel<State> listModel = new DefaultListModel<>();
     listModel.addElement(initial);
-    listModel.addAll(List.of(other));
+    for (State state : other) {
+      listModel.add(listModel.size(), state);
+    }
     return listModel;
   }
 
