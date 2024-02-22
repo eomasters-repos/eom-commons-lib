@@ -22,7 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -32,11 +33,13 @@ class JsonUtilsTest {
   @Test
   void readMap() throws IOException {
     Map<String, Instance> map = JsonUtils.readMap(JsonUtilsTest.class.getResourceAsStream("instances.json"),
-        new TypeToken<>() {
+        new TypeToken<Map<String, Instance>>() {
         });
     assertEquals(3, map.size());
     Set<String> strings = map.keySet();
-    assertTrue(strings.containsAll(List.of("A", "B", "Z")));
+    ArrayList<String> temp = new ArrayList<>();
+    Collections.addAll(temp, "A", "B", "Z");
+    assertTrue(strings.containsAll(temp));
 
     Instance a = map.get("A");
     assertEquals("A", a.name);
