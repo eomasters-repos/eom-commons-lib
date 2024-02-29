@@ -25,7 +25,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import org.eomasters.icons.Icon.SIZE;
 
 /**
  * Provides essentials icons
@@ -37,11 +36,10 @@ public final class Icons {
     final JFrame frame = new JFrame("Icons");
     frame.setPreferredSize(new Dimension(400, 400));
     Container contentPane = frame.getContentPane();
-    SIZE size = SIZE.S48;
     Field[] fields = Icons.class.getFields();
     for (Field field : fields) {
       if (Icon.class.isAssignableFrom(field.getType())) {
-        contentPane.add(new JLabel(((Icon) field.get(null)).getImageIcon(size)));
+        contentPane.add(new JLabel(((Icon) field.get(null)).getImageIcon(Icon.SIZE_48)));
       }
     }
     int gridsize = (int) Math.ceil(Math.sqrt(contentPane.getComponents().length));

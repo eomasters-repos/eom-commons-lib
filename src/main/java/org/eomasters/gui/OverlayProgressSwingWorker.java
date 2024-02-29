@@ -41,7 +41,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
-import org.eomasters.icons.Icon.SIZE;
+import org.eomasters.icons.Icon;
 import org.eomasters.icons.Icons;
 import org.eomasters.utils.ImageUtils;
 import org.eomasters.utils.ProgressManager;
@@ -55,7 +55,7 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
 
   public static void main(String[] args) {
     final JFrame frame = new JFrame("OverlayProgressSwingWorker");
-    JButton progressBtn = new JButton(Icons.EYE.getImageIcon(SIZE.S24));
+    JButton progressBtn = new JButton(Icons.EYE.getImageIcon(Icon.SIZE_24));
     JPanel overlayed = new JPanel(new BorderLayout());
     overlayed.add(progressBtn, BorderLayout.NORTH);
     overlayed.add(new JList<>(new String[]{"1", "2", "3", "4", "5"}), BorderLayout.CENTER);

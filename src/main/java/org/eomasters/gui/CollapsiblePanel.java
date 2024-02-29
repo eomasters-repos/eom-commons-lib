@@ -36,7 +36,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
-import org.eomasters.icons.Icon.SIZE;
+import org.eomasters.icons.Icon;
 import org.eomasters.icons.Icons;
 import org.eomasters.utils.SystemHelper;
 
@@ -148,10 +148,10 @@ public class CollapsiblePanel extends JPanel {
    */
   public void setCollapsed(boolean collapse) {
     if (collapse) {
-      toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(SIZE.S16));
+      toggleLabel.setIcon(Icons.ARROW_DOWN.getImageIcon(Icon.SIZE_16));
       contentPanel.setVisible(false);
     } else {
-      toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(SIZE.S16));
+      toggleLabel.setIcon(Icons.ARROW_UP.getImageIcon(Icon.SIZE_16));
       contentPanel.setVisible(true);
     }
     revalidate();
