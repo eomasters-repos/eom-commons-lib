@@ -33,15 +33,14 @@ class IconWithAddition extends Icon {
   }
 
   @Override
-  protected ImageIcon createIcon(SIZE size) {
+  protected ImageIcon createIcon(int size) {
     ImageIcon srcImage = source.getImageIcon(size);
     ImageIcon addImage = addition.getImageIcon(size);
 
-    int pixelSize = size.getSize();
-    BufferedImage image = new BufferedImage(pixelSize, pixelSize, BufferedImage.TYPE_4BYTE_ABGR);
+    BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
     Graphics2D canvas = image.createGraphics();
-    int quarter = pixelSize / 4;
-    canvas.drawImage(srcImage.getImage(), quarter, 0, pixelSize - quarter, pixelSize - quarter, null);
+    int quarter = size / 4;
+    canvas.drawImage(srcImage.getImage(), quarter, 0, size - quarter, size - quarter, null);
     canvas.drawImage(addImage.getImage(), 0, 0, null);
     return new ImageIcon(image);
   }

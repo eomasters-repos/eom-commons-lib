@@ -23,6 +23,11 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 public abstract class Icon {
+  
+  public static final int SIZE_16 = 16;
+  public static final int SIZE_24 = 16;
+  public static final int SIZE_32 = 32;
+  public static final int SIZE_48 = 48;
 
   private final String path;
   private final Class<?> loadingClass;
@@ -44,37 +49,22 @@ public abstract class Icon {
     return loadingClass;
   }
 
-  public ImageIcon getImageIcon(SIZE size) {
+  public ImageIcon getImageIcon(int size) {
     return createIcon(size);
   }
 
-  public List<? extends Image> getImages() {
+  public List<? extends Image> getImages(int[] sizes) {
     ArrayList<Image> images = new ArrayList<>();
-    SIZE[] sizes = SIZE.values();
-    for (SIZE size : sizes) {
+    for (int size : sizes) {
       images.add(getImageIcon(size).getImage());
     }
     return images;
   }
 
-  protected abstract ImageIcon createIcon(SIZE size);
+  protected abstract ImageIcon createIcon(int size);
 
   public Icon withAddition(Icon addition) {
     return new IconWithAddition(this, addition);
-  }
-
-  public enum SIZE {
-    S16(16), S24(24), S32(32), S48(48);
-
-    private final int size;
-
-    SIZE(int size) {
-      this.size = size;
-    }
-
-    public int getSize() {
-      return size;
-    }
   }
 
 }
