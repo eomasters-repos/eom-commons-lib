@@ -17,16 +17,39 @@
 
 package org.eomasters.utils;
 
+import java.util.regex.Pattern;
+
 public class TextUtils {
+
+  private static final String MAIL_OWASP_REGEX = "^[a-zA-Z0-9_+&*-]+"
+      + "(?:\\.[a-zA-Z0-9_+&*-]+)*@"
+      + "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
   private TextUtils() {
   }
 
+  /**
+   * Escaped characters in the provided text which have a special meaning in HTML.
+   * These are the  characters: <, >, &, \, '
+   *
+   * @param text the text to escape
+   * @return the text with escaped characters
+   */
   public static String escapeHtml(String text) {
     return text.replace("<", "&lt;")
                .replace(">", "&gt;")
                .replace("&", "&amp;")
                .replace("\"", "&quot;")
                .replace("'", "&apos;");
+  }
+
+  /**
+   * Checks whether the given address string is a valid email address.
+   *
+   * @param address the address to check
+   * @return true if the address is valid
+   */
+  public static boolean isValidEmailAddress(String address) {
+    return Pattern.matches(MAIL_OWASP_REGEX, address);
   }
 }

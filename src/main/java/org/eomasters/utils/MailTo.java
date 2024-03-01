@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * Builder for mailto URIs.
@@ -34,9 +33,6 @@ public class MailTo {
   public static final int MAX_SUBJECT_LENGTH = 150;
   public static final int MAX_BODY_LENGTH = 1800;
   public static final int MAX_MAILTO_LENGTH = 2040;
-  private static final String MAIL_OWASP_REGEX = "^[a-zA-Z0-9_+&*-]+"
-      + "(?:\\.[a-zA-Z0-9_+&*-]+)*@"
-      + "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
   private final String[] recipients;
   private String[] carbonCopies;
@@ -147,21 +143,11 @@ public class MailTo {
     ArrayList<String> addressList = new ArrayList<>();
     addressList.add(mainAddress);
     Collections.addAll(addressList, addresses);
-    Optional<String> optional = addressList.stream().filter(s -> !isValidEmailAddress(s)).findFirst();
+    Optional<String> optional = addressList.stream().filter(s -> !TextUtils.isValidEmailAddress(s)).findFirst();
     if (optional.isPresent()) {
       throw new MailToException("Invalid email address: '" + optional.get() + "'");
     }
     return addressList.toArray(new String[]{});
-  }
-
-  /**
-   * Checks whether the given address is a valid email address.
-   *
-   * @param address the address to check
-   * @return true if the address is valid
-   */
-  boolean isValidEmailAddress(String address) {
-    return Pattern.matches(MAIL_OWASP_REGEX, address);
   }
 
   /**
