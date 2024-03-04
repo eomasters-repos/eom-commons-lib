@@ -29,8 +29,8 @@ public class TextUtils {
   }
 
   /**
-   * Escaped characters in the provided text which have a special meaning in HTML.
-   * These are the  characters: <, >, &, \, '
+   * Escaped characters in the provided text which have a special meaning in HTML. These are the  characters: <, >, &,
+   * \, '
    *
    * @param text the text to escape
    * @return the text with escaped characters
@@ -50,6 +50,6 @@ public class TextUtils {
    * @return true if the address is valid
    */
   public static boolean isValidEmailAddress(String address) {
-    return Pattern.matches(MAIL_OWASP_REGEX, address);
+    return address != null && Pattern.matches(MAIL_OWASP_REGEX, address);
   }
 }
