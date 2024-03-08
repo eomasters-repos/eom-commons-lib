@@ -55,18 +55,22 @@ public final class Dialogs {
    * @param message the message component
    */
   public static void message(String title, JComponent message) {
-    JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+    message(title, message, null);
   }
 
   /**
    * Shows a message dialog.
    *
    * @param title   the title
-   * @param icon    the dialog icon
    * @param message the message component
+   * @param icon    the dialog icon
    */
-  public static void message(String title, Icon icon, JComponent message) {
-    JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, icon);
+  public static void message(String title, JComponent message, Icon icon) {
+    if (icon == null) {
+      JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+    } else {
+      JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, icon);
+    }
   }
 
   /**
@@ -76,7 +80,7 @@ public final class Dialogs {
    * @param errorMessage the error message
    */
   public static void error(String title, String errorMessage) {
-    JOptionPane.showMessageDialog(null, errorMessage, title, JOptionPane.ERROR_MESSAGE);
+    error(null, title, errorMessage);
   }
 
   /**
@@ -100,7 +104,7 @@ public final class Dialogs {
    */
   public static void error(String title, String message, Throwable throwable) {
     JPanel messagePanel = new JPanel(new MigLayout("top, left, fillx, gap 5 5"));
-    messagePanel.add(new JLabel("<html>"+ message + ": <br>" + throwable.getMessage()), "wrap");
+    messagePanel.add(new JLabel("<html>" + message + ": <br>" + throwable.getMessage()), "wrap");
     StringWriter stringWriter = new StringWriter();
     throwable.printStackTrace(new PrintWriter(stringWriter));
     CollapsiblePanel detailsArea = CollapsiblePanel.createLongTextPanel("Details", stringWriter.toString());
@@ -132,9 +136,9 @@ public final class Dialogs {
   /**
    * Asks the user for confirmation.
    *
-   * @param title    the title
-   * @param question the question
-   * @param parentComponent   the parent component to determine the frame the dialog will be displayed in
+   * @param title           the title
+   * @param question        the question
+   * @param parentComponent the parent component to determine the frame the dialog will be displayed in
    * @return {@code true} if the user confirmed, {@code false} otherwise
    */
   public static boolean confirmation(String title, String question, Component parentComponent) {
@@ -180,7 +184,8 @@ public final class Dialogs {
       msgPanel.add(checkBox, BorderLayout.SOUTH);
     }
     boolean confirmed =
-        JOptionPane.showConfirmDialog(parentComponent, msgPanel, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+        JOptionPane.showConfirmDialog(parentComponent, msgPanel, title, JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE)
             == JOptionPane.YES_OPTION;
     if (preferenceKey != null && preferences != null) {
       preferences.node(CONFIRMATION_NODE).putBoolean(preferenceKey, confirmed);
