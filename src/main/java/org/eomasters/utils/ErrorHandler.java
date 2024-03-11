@@ -47,14 +47,14 @@ public class ErrorHandler {
    *
    * @param title     the title
    * @param message   the error message
-   * @param exception the cause exception
+   * @param throwable the cause throwable
    */
-  public static void handleError(String title, String message, Exception exception) {
-    LOG.log(Level.WARNING, message, exception);
+  public static void handleError(String title, String message, Throwable throwable) {
+    LOG.log(Level.WARNING, message, throwable);
     if (SystemHelper.isHeadless()) {
       return;
     }
-    Dialogs.error(title, message, exception);
+    Dialogs.error(title, message, throwable);
   }
 
 
