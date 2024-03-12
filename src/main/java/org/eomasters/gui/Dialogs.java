@@ -23,12 +23,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.prefs.Preferences;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import org.eomasters.icons.Icons;
 
 /**
  * Utility class for showing dialogs.
@@ -36,7 +38,15 @@ import net.miginfocom.swing.MigLayout;
 public final class Dialogs {
 
   private static final String CONFIRMATION_NODE = "confirmation";
+  private static org.eomasters.icons.Icon defaultIcon = Icons.EOMASTERS;
 
+  public static void setDefaultIcon(org.eomasters.icons.Icon icon) {
+    defaultIcon = icon;
+  }
+
+  public static org.eomasters.icons.Icon getDefaultIcon() {
+    return defaultIcon;
+  }
 
   /**
    * Shows a message dialog.
@@ -67,10 +77,9 @@ public final class Dialogs {
    */
   public static void message(String title, JComponent message, Icon icon) {
     if (icon == null) {
-      JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
-    } else {
-      JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, icon);
+      icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
     }
+    JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, icon);
   }
 
   /**
@@ -91,7 +100,8 @@ public final class Dialogs {
    * @param errorMessage    the error message
    */
   public static void error(Component parentComponent, String title, String errorMessage) {
-    JOptionPane.showMessageDialog(parentComponent, errorMessage, title, JOptionPane.ERROR_MESSAGE);
+    ImageIcon icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
+    JOptionPane.showMessageDialog(parentComponent, errorMessage, title, JOptionPane.ERROR_MESSAGE, icon);
   }
 
   /**
@@ -110,7 +120,8 @@ public final class Dialogs {
     CollapsiblePanel detailsArea = CollapsiblePanel.createLongTextPanel("Details", stringWriter.toString());
     messagePanel.add(detailsArea, "top, left, grow, wrap");
     messagePanel.doLayout();
-    JOptionPane.showMessageDialog(null, messagePanel, title, JOptionPane.ERROR_MESSAGE);
+    ImageIcon icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
+    JOptionPane.showMessageDialog(null, messagePanel, title, JOptionPane.ERROR_MESSAGE, icon);
   }
 
   /**
@@ -130,7 +141,9 @@ public final class Dialogs {
    * @param prompt the prompt component
    */
   public static String input(String title, JComponent prompt) {
-    return JOptionPane.showInputDialog(null, prompt, title, JOptionPane.QUESTION_MESSAGE);
+    ImageIcon icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
+    return (String) JOptionPane.showInputDialog(null, prompt, title, JOptionPane.QUESTION_MESSAGE, icon,
+        null, null);
   }
 
   /**
@@ -183,9 +196,10 @@ public final class Dialogs {
       checkBox.setHorizontalTextPosition(JCheckBox.RIGHT);
       msgPanel.add(checkBox, BorderLayout.SOUTH);
     }
+    ImageIcon icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
     boolean confirmed =
         JOptionPane.showConfirmDialog(parentComponent, msgPanel, title, JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE)
+            JOptionPane.QUESTION_MESSAGE, icon)
             == JOptionPane.YES_OPTION;
     if (preferenceKey != null && preferences != null) {
       preferences.node(CONFIRMATION_NODE).putBoolean(preferenceKey, confirmed);

@@ -53,6 +53,10 @@ public final class Icons {
   /**
    * An icon showing an arrow down.
    */
+  public static final Icon EOMASTERS = new RasterIcon("/icons/eomasters", Icons.class);
+  /**
+   * An icon showing an arrow down.
+   */
   public static final Icon ARROW_DOWN = new SvgIcon("/icons/essentials/ArrowDown", Icons.class);
   /**
    * An icon showing an arrow up.
