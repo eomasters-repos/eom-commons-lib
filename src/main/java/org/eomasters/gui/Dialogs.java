@@ -51,35 +51,38 @@ public final class Dialogs {
   /**
    * Shows a message dialog.
    *
+   * @param parent the parent component
    * @param title   the title
    * @param message the message
    */
-  public static void message(String title, String message) {
-    message(title, new JLabel(message));
+  public static void message(Component parent, String title, String message) {
+    message(parent, title, new JLabel(message));
   }
 
   /**
    * Shows a message dialog.
    *
+   * @param parent the parent component
    * @param title   the title
    * @param message the message component
    */
-  public static void message(String title, JComponent message) {
-    message(title, message, null);
+  public static void message(Component parent, String title, JComponent message) {
+    message(parent, title, message, null);
   }
 
   /**
    * Shows a message dialog.
    *
+   * @param parent the parent component
    * @param title   the title
    * @param message the message component
    * @param icon    the dialog icon
    */
-  public static void message(String title, JComponent message, Icon icon) {
+  public static void message(Component parent, String title, JComponent message, Icon icon) {
     if (icon == null) {
       icon = defaultIcon.getImageIcon(org.eomasters.icons.Icon.SIZE_16);
     }
-    JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, icon);
+    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE, icon);
   }
 
   /**
