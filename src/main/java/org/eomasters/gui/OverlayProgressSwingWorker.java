@@ -21,10 +21,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dialog;
+import java.awt.Dialog.ModalityType;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -34,6 +39,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -150,6 +156,18 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     }
   }
 
+  public void waitFor() {
+    JDialog dialog = new JDialog((Dialog) null);
+    dialog.setUndecorated(true);
+    dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+    dialog.setFocusableWindowState(false);
+    dialog.setBounds(0, 0, 0, 0);
+    addPropertyChangeListener(new SwingWorkerCompletionWaiter(dialog));
+    execute();
+    //the dialog will be visible until the SwingWorker is done
+    dialog.setVisible(true);
+  }
+
   @Override
   protected Void doInBackground() {
     if (component.isShowing()) {
@@ -178,6 +196,22 @@ public class OverlayProgressSwingWorker extends SwingWorker<Void, Void> {
     component.removeComponentListener(sizeListener);
     if (popupComponent != null) {
       popupComponent.setVisible(false);
+    }
+  }
+
+  private static class SwingWorkerCompletionWaiter implements PropertyChangeListener {
+    private JDialog dialog;
+
+    public SwingWorkerCompletionWaiter(JDialog dialog) {
+      this.dialog = dialog;
+    }
+
+    public void propertyChange(PropertyChangeEvent event) {
+      if ("state".equals(event.getPropertyName())
+          && SwingWorker.StateValue.DONE == event.getNewValue()) {
+        dialog.setVisible(false);
+        dialog.dispose();
+      }
     }
   }
 
