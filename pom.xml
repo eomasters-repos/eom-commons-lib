@@ -71,7 +71,7 @@
           <version>3.11.0</version>
         </plugin>
         <plugin>
-        <artifactId>maven-source-plugin</artifactId>
+          <artifactId>maven-source-plugin</artifactId>
           <version>3.3.0</version>
         </plugin>
         <plugin>
@@ -98,22 +98,25 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
         <configuration>
           <debug>true</debug>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
-            <phase>package</phase>
+            <phase>verify</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <!-- use mvn license:remove-file-header to remove the header and regenerate it-->
         <groupId>org.codehaus.mojo</groupId>
