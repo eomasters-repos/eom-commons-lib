@@ -183,6 +183,10 @@ public final class Icons {
    */
   public static final Icon MINUS = new SvgIcon("/icons/essentials/Minus", Icons.class);
   /**
+   * An icon showing a (hamburger) menu.
+   */
+  public static final Icon MENU = new SvgIcon("/icons/essentials/Menu", Icons.class);
+  /**
    * An icon showing a paper.
    */
   public static final Icon PAPER = new SvgIcon("/icons/essentials/Paper", Icons.class);
