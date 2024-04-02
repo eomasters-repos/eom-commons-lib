@@ -278,13 +278,13 @@ public class GlobalGrid {
    * @see #isInGridBounds(double, double)
    */
   public Point getCellId(double lon, double lat) {
-    // consider the hal-pixel offset which is already in the adjacent cell
-    double latRemaining = Math.abs(lat % cellHeight);
-    if (latRemaining > 0 && latRemaining < (pixelSize / 2)) {
+    // consider the half-pixel offset which is already in the adjacent cell
+    double latDistance = getDistanceToBorder(lat, cellHeight);
+    if (latDistance > 0 && latDistance < (pixelSize / 2)) {
       lat = lat - (pixelSize / 2);
     }
-    double lonRemaining = Math.abs(lon % cellWidth);
-    if (lonRemaining > 0 && lonRemaining < (pixelSize / 2)) {
+    double lonDistance = getDistanceToBorder(lon, cellWidth);
+    if (lonDistance > 0 && lonDistance < (pixelSize / 2)) {
       lon = lon + (pixelSize / 2);
     }
     // convert longitude to range -180 to 180, so that it wraps around the globe
@@ -308,6 +308,15 @@ public class GlobalGrid {
       y = ((int) Math.ceil(lat / cellHeight) * cellHeight);
     }
     return new Point(x, y);
+  }
+
+  private double getDistanceToBorder(double ordinate, int cellSpan) {
+    double remaining = Math.abs(ordinate) % cellSpan;
+    if(remaining <= pixelSize) {
+      return remaining;
+    }else {
+      return cellSpan - remaining;
+    }
   }
 
   /**

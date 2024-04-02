@@ -118,12 +118,16 @@ class GlobalGridTest {
   void testGetCellIdAtTheEdgesWithPixelSize() {
     GlobalGrid grid = new GlobalGrid(3, 3, 3/36000.0);
     Point cellId;
-    // the cell is of size 36000x36000 pixels
-    // the following location is actually already in the adjacent 57 cell and not anymore in the 60 cell
     cellId = grid.getCellId(-120, 57.000018);
     assertEquals(new Point(-120, 57), cellId);
     cellId = grid.getCellId(-117.000018, 57.000018);
     assertEquals(new Point(-117, 57), cellId);
+    cellId = grid.getCellId(2.999967, 52.284484);
+    assertEquals(new Point(3, 54), cellId);
+    cellId = grid.getCellId(3.99967, -2.9999967);
+    assertEquals(new Point(3, -3), cellId);
+    cellId = grid.getCellId(5.999978, 52.022732);
+    assertEquals(new Point(6, 54), cellId);
   }
 
   @Test
