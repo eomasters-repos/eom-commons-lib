@@ -1,4 +1,5 @@
 # This workflow builds and deploys the artifact to GitHub Packages when a release is created
+# It is not possible to allow user to access libs with out a token. That's too much. Makes no sense to publish the lib.
 
 name: Maven Deploy
 
@@ -32,4 +33,4 @@ jobs:
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.MAVEN_DEPLOY_xxxGITHUB }}
+        GITHUB_TOKEN: ${{ secrets.MAVEN_DEPLOY_GITHUB }}
