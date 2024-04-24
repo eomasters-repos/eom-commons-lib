@@ -18,7 +18,7 @@
 package org.eomasters.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
@@ -47,7 +47,6 @@ public class CollapsiblePanel extends JPanel {
 
   private final JLabel toggleLabel;
   private final JComponent contentPanel;
-  private final JPanel titlePanel;
 
   /**
    * Creates a new collapsible panel with the given title.
@@ -57,7 +56,7 @@ public class CollapsiblePanel extends JPanel {
   public CollapsiblePanel(String title) {
     super(new BorderLayout(5, 5));
     setName("CollapsiblePanel." + title.replaceAll(" ", "_"));
-    setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     MouseAdapter collapser = new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -65,7 +64,7 @@ public class CollapsiblePanel extends JPanel {
       }
     };
 
-    titlePanel = new JPanel(new MigLayout("flowx, insets 5 0 5 0", "[][fill, grow]"));
+    JPanel titlePanel = new JPanel(new MigLayout("flowx, insets 5 0 5 0", "[][fill, grow]"));
     titlePanel.addMouseListener(collapser);
     JLabel titleLabel = new JLabel(title);
     titleLabel.addMouseListener(collapser);
@@ -94,6 +93,7 @@ public class CollapsiblePanel extends JPanel {
   public static CollapsiblePanel createLongTextPanel(String title, String text) {
 
     JTextArea textArea = new JTextArea(text);
+    textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, textArea.getFont().getSize()));
     textArea.setColumns(70);
     textArea.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
     textArea.setTabSize(4);
