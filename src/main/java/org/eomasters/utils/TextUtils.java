@@ -36,9 +36,9 @@ public class TextUtils {
    * @return the text with escaped characters
    */
   public static String escapeHtml(String text) {
-    return text.replace("<", "&lt;")
+    return text.replace("&", "&amp;")
+               .replace("<", "&lt;")
                .replace(">", "&gt;")
-               .replace("&", "&amp;")
                .replace("\"", "&quot;")
                .replace("'", "&apos;");
   }
@@ -51,5 +51,35 @@ public class TextUtils {
    */
   public static boolean isValidEmailAddress(String address) {
     return address != null && Pattern.matches(MAIL_OWASP_REGEX, address);
+  }
+
+  /**
+   * Formats the given data as a formatted table.
+   *
+   * @param data the table data to format
+   * @return the formatted table
+   */
+  public static String asFormattedTable(String[][] data) {
+    if (data == null) {
+      return "";
+    }
+
+    // get column widths
+    int[] columnWidths = new int[data[0].length];
+    for (String[] row : data) {
+      for (int i = 0; i < row.length; i++) {
+        columnWidths[i] = Math.max(columnWidths[i], row[i].length());
+      }
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (String[] row : data) {
+      sb.append("|");
+      for (int j = 0; j < row.length; j++) {
+        sb.append(String.format(" %-" + columnWidths[j] + "s |", row[j]));
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }
