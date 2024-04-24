@@ -17,6 +17,7 @@
 
 package org.eomasters.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,4 +36,23 @@ public class TextUtilsTest {
     assertTrue(TextUtils.isValidEmailAddress("marco@eomasters.org"));
   }
 
+  @Test
+  void escapeHtml() {
+    assertEquals("test", TextUtils.escapeHtml("test"));
+    assertEquals("test &amp; test", TextUtils.escapeHtml("test & test"));
+    assertEquals("test &lt; test", TextUtils.escapeHtml("test < test"));
+    assertEquals("test &gt; test", TextUtils.escapeHtml("test > test"));
+    assertEquals("test &quot; test", TextUtils.escapeHtml("test \" test"));
+    assertEquals("test &apos; test", TextUtils.escapeHtml("test ' test"));
+    assertEquals("test &lt; test &gt; test", TextUtils.escapeHtml("test < test > test"));
+  }
+
+  @Test
+  void asFormattedTable() {
+    String[][] table = {{"Header_a", "Name_b"}, {"ab", "defghjklmnopqrstuvwxyz"}, {"", "1053"}};
+    assertEquals(""
+        + "| Header_a | Name_b                 |\n"
+        + "| ab       | defghjklmnopqrstuvwxyz |\n"
+        + "|          | 1053                   |\n", TextUtils.asFormattedTable(table));
+  }
 }
