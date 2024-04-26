@@ -5,9 +5,7 @@ on:
     types: [created]
     branches: [ "master" ]
     inputs:
-      deployVersion:
-        default: ${{ github.event.release.tag_name }}
-        type: string
+      deployVersion: ${{ github.event.release.tag_name }}
   workflow_dispatch:
     inputs:
       deployVersion:
