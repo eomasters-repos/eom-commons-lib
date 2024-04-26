@@ -5,7 +5,7 @@ on:
     types: [created]
     branches: [ "master" ]
     inputs:
-      deployVersion: ${{ github.event.release.tag_name }}
+      deployVersion: ${{ github.ref }}
   workflow_dispatch:
     inputs:
       deployVersion:
