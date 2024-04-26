@@ -5,12 +5,14 @@ on:
     types: [created]
     branches: [ "master" ]
     inputs:
-      deployVersion: ${{ github.event.release.tag_name }}
+      deployVersion:
+        default: ${{ github.event.release.tag_name }}
+        type: string
   workflow_dispatch:
     inputs:
-        deployVersion:
-          description: 'Version comment'
-          default: 'test'
+      deployVersion:
+        description: 'Version comment'
+        default: 'test'
 
 
 jobs:
