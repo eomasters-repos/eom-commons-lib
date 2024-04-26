@@ -36,7 +36,9 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Local Artifact Deployment
-        run: mvn -B deploy -Ddeploy.dir=${{ github.workspace }}/mvn-repo --file ${{ github.workspace }}/this-repo/pom.xml
+        run: |
+          cd ${{ github.workspace }}/this-repo
+          mvn -B deploy -Ddeploy.dir=${{ github.workspace }}/mvn-repo --file pom.xml
 
 
       - name: Push artifacts
