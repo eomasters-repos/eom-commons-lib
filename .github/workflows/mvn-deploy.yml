@@ -14,11 +14,10 @@ jobs:
 
     steps:
       - name: Checkout maven repository
-        #      env:
-        #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #        FIRST_NAME: Mona
-        #        LAST_NAME: Octocat
         uses: actions/checkout@v4
+        with:
+          repository: eomasters-repos/mvn-repo
+          path: mvn-repo
 
 
       - name: Checkout code
@@ -36,13 +35,12 @@ jobs:
         run: mvn -B deploy -Ddeploy.dir=mvn-repo --file pom.xml
 
 
-      - name: Push changes
-      - uses: actions/checkout@v4
-      - run: |
-          date > generated.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+      - name: Push artifacts
+        run: |
+          cd mvn-repo
+          git config --local user.name Github Action
+          git config user.email ${{ github.repository }}@github.com
           git add .
-          git commit -m "${{ github.repository}} ${{ github.ref }} deployed"
+          git commit -m "${{ github.repository }} ${{ github.ref }} deployed"
           git push
 
