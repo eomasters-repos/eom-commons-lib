@@ -39,7 +39,7 @@ jobs:
 
       - name: Push artifacts
         run: |
-          cd mvn-repo
+          cd ${{ github.workspace }}/mvn-repo
           git config --local user.name Github Action
           git config user.email ${{ github.repository }}@github.com
           git add .
