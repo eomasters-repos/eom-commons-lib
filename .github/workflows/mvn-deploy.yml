@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Deploy:
 
     runs-on: ubuntu-latest
     permissions:
@@ -15,12 +15,11 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout maven repository
+      - name: Checkout mvn-repo
         uses: actions/checkout@v4
         with:
           repository: eomasters-repos/mvn-repo
           path: mvn-repo
-
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,8 +32,8 @@ jobs:
           cache: 'maven'
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-      - name: Build with Maven
-        run: mvn -B deploy -Ddeploy.dir=mvn-repo --file pom.xml
+      - name: Local Artifact Deployment
+        run: mvn -B deploy -Ddeploy.dir=${{ github.workspace }}/mvn-repo --file pom.xml
 
 
       - name: Push artifacts
