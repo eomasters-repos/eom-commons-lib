@@ -4,7 +4,14 @@ on:
   release:
     types: [created]
     branches: [ "master" ]
+    inputs:
+      deployVersion: ${{ github.event.release.tag_name }}
   workflow_dispatch:
+    inputs:
+        deployVersion:
+          description: 'Version comment'
+          default: 'test'
+
 
 jobs:
   Deploy:
@@ -48,6 +55,6 @@ jobs:
           git config --local user.name Github Action
           git config user.email ${{ github.repository }}@github.com
           git add .
-          git commit -m "${{ github.repository }} ${{ github.ref }} deployed"
+          git commit -m "${{ github.repository }} ${{ inputs.deployVersion }} deployed"
           git push
 
