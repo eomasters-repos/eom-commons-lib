@@ -167,6 +167,10 @@ public final class Icons {
    */
   public static final Icon GRAPH = new SvgIcon("/icons/essentials/Graph", Icons.class);
   /**
+   * A hashtag icon.
+   */
+  public static final Icon HASHTAG = new SvgIcon("/icons/essentials/Hashtag", Icons.class);
+  /**
    * An icon representing an import action.
    */
   public static final Icon IMPORT = new SvgIcon("/icons/essentials/Import", Icons.class);
