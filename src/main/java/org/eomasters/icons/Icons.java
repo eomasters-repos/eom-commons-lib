@@ -17,12 +17,13 @@
 
 package org.eomasters.icons;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.lang.reflect.Field;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -34,18 +35,23 @@ public final class Icons {
 
   public static void main(String[] args) throws IllegalAccessException {
     final JFrame frame = new JFrame("Icons");
-    frame.setPreferredSize(new Dimension(400, 400));
-    Container contentPane = frame.getContentPane();
+    frame.setPreferredSize(new Dimension(500, 500));
+    JPanel contentPane = new JPanel();
     Field[] fields = Icons.class.getFields();
     for (Field field : fields) {
       if (Icon.class.isAssignableFrom(field.getType())) {
-        contentPane.add(new JLabel(((Icon) field.get(null)).getImageIcon(Icon.SIZE_48)));
+        JLabel label = new JLabel(((Icon) field.get(null)).getImageIcon(Icon.SIZE_48));
+        label.setPreferredSize(new Dimension(50, 50));
+        contentPane.add(label);
       }
     }
     int gridsize = (int) Math.ceil(Math.sqrt(contentPane.getComponents().length));
     contentPane.setLayout(new GridLayout(gridsize, gridsize));
+    contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    frame.setContentPane(contentPane);
     frame.setLocationRelativeTo(null);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    frame.doLayout();
     frame.pack();
     SwingUtilities.invokeLater(() -> frame.setVisible(true));
   }
@@ -74,6 +80,10 @@ public final class Icons {
    * An icon showing a bug.
    */
   public static final Icon BUG = new SvgIcon("/icons/essentials/Bug", Icons.class);
+  /**
+   * An icon showing cancel/close cross.
+   */
+  public static final Icon CANCEL = new SvgIcon("/icons/essentials/Cancel", Icons.class);
   /**
    * An icon showing checkmark in circle.
    */

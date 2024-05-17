@@ -30,6 +30,7 @@ class IconsTest {
     assertNotNull(Icons.ARROW_Left);
     assertNotNull(Icons.ARROW_RIGHT);
     assertNotNull(Icons.BUG);
+    assertNotNull(Icons.CANCEL);
     assertNotNull(Icons.CHECKMARK);
     assertNotNull(Icons.CLOCK);
     assertNotNull(Icons.CLOUD);
