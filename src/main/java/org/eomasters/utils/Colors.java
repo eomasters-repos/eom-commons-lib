@@ -42,9 +42,10 @@ public class Colors {
   }
 
   /**
-   * Creates a color from a rgba string. The string should start with "#" followed with an 8 digit hex value.
+   * Creates a color from a rgba string. The string should start with "#" followed with a 6 or 8 digit hex value.
+   * If only 6 digits (RGB) are provided, the alpha channel is set to be fully opaque.
    *
-   * @param rgba the rgba string in the form '#00000000'
+   * @param rgba the rgba string in the form '#000000(00)'
    * @return the created color
    */
   public static Color create(String rgba) {
@@ -52,11 +53,16 @@ public class Colors {
   }
 
   private static Color parseRGBA(String rgba) {
+    // consider alpha only if the rgba string is long enough
+
     int r = Integer.parseInt(rgba.substring(1, 3), 16);
     int g = Integer.parseInt(rgba.substring(3, 5), 16);
     int b = Integer.parseInt(rgba.substring(5, 7), 16);
-    int a = Integer.parseInt(rgba.substring(7, 9), 16);
-    return new Color(r, g, b, a);
+    if (rgba.length() > 7) {
+      return new Color(r, g, b, Integer.parseInt(rgba.substring(7, 9), 16));
+    } else {
+      return new Color(r, g, b);
+    }
   }
 
 }
