@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-// TODO: move to eom-commons
 /**
  * Generic implementation for storing objects as json text using the
  * <a href="https://github.com/google/gson/#readme">Gson library</a>.
@@ -63,7 +62,6 @@ public class GsonStore<T> {
         this.type = type;
         final GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        builder.excludeFieldsWithModifiers(Modifier.TRANSIENT);
         config.configBuilder(builder);
         gson = builder.create();
     }
