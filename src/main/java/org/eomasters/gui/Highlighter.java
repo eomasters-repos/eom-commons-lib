@@ -146,7 +146,7 @@ public class Highlighter {
   private void highlightComponent(String infoMessage) {
     component.setBorder(createHighlightBorder(highlightMargin, highlightColor));
     if (infoMessage != null) {
-      popupComponent = createPopup(infoMessage);
+      popupComponent = showPopup(infoMessage);
     }
   }
 
@@ -161,11 +161,12 @@ public class Highlighter {
     }
   }
 
-  private PopupComponent createPopup(String message) {
+  private PopupComponent showPopup(String message) {
     MultiLineText textField = new MultiLineText(message);
     textField.setFont(textField.getFont().deriveFont(Font.BOLD));
     textField.setEditable(false);
-    textField.setBorder(new EmptyBorder(0, 0, 0, 0));
+    textField.setBorder(new EmptyBorder(2, 2, 0, 0));
+    textField.setPreferredWidth(component.getWidth());
     float[] rgbComponents = highlightColor.getRGBComponents(null);
     textField.setBackground(new Color(highlightColor.getColorSpace(), rgbComponents, rgbComponents[3] * 0.3f));
     PopupComponent popupComponent = new PopupComponent(textField);
