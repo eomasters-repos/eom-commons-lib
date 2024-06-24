@@ -49,7 +49,7 @@ public class HighlighterMain {
         highlightedComponent2.addFocusListener(new FocusAdapter() {
           @Override
           public void focusLost(FocusEvent e) {
-            Highlighter.error(highlightedComponent2, "Nanana!");
+            Highlighter.error(highlightedComponent2, "Nanana! This is a long error message");
           }
         });
         frame.setContentPane(panel);

@@ -166,7 +166,8 @@ public class Highlighter {
     textField.setFont(textField.getFont().deriveFont(Font.BOLD));
     textField.setEditable(false);
     textField.setBorder(new EmptyBorder(2, 2, 0, 0));
-    textField.setPreferredWidth(component.getWidth());
+    textField.setColumns(Math.min(15, message.length()));
+    textField.setRows((int) Math.floor((double) message.length() / textField.getColumns()));
     float[] rgbComponents = highlightColor.getRGBComponents(null);
     textField.setBackground(new Color(highlightColor.getColorSpace(), rgbComponents, rgbComponents[3] * 0.3f));
     PopupComponent popupComponent = new PopupComponent(textField);
