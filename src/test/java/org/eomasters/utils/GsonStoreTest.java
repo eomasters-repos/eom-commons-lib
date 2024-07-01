@@ -20,6 +20,10 @@ package org.eomasters.utils;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.google.common.jimfs.Configuration;
@@ -82,6 +86,27 @@ public class GsonStoreTest {
   }
 
   @Test
+  public void nullJson() {
+    String json = null;
+    DummyObject dummyObject = store.fromJson(json);
+    assertNull(dummyObject);
+  }
+
+  @Test
+  public void emptyJson() {
+    String json = "";
+    DummyObject dummyObject = store.fromJson(json);
+    assertNull(dummyObject);
+  }
+
+  @Test
+  public void invalidJson() {
+    String json = "{\"name\":\"test\",\"numbers\":1,2,3,\"color\":{\"coloring\":16777215}}";
+    Exception exception = assertThrows(JsonSyntaxException.class, () -> store.fromJson(json));
+    assertTrue(exception.getMessage().contains("Expected BEGIN_ARRAY but was NUMBER"));
+  }
+
+  @Test
   public void loadSyntaxError() throws URISyntaxException {
     try {
       final Path location = Paths.get(
@@ -118,12 +143,12 @@ public class GsonStoreTest {
   }
 
   @Test
-  public void asString() {
+  public void toJson() {
     DummyObject dummyObject = new DummyObject();
     dummyObject.name = "test";
     dummyObject.numbers = new int[]{1, 2, 3};
     dummyObject.color = new Color(255, 255, 255, 127);
-    final String text = store.asString(dummyObject);
+    final String text = store.toJson(dummyObject);
     assertEquals("{\n"
         + "  \"name\": \"test\",\n"
         + "  \"numbers\": [\n"
@@ -135,6 +160,25 @@ public class GsonStoreTest {
         + "    \"coloring\": 2147483647\n"
         + "  }\n"
         + "}", text);
+  }
+
+  @Test
+  public void fromJson() {
+    String json = "{\n"
+        + "  \"name\": \"test\",\n"
+        + "  \"numbers\": [\n"
+        + "    1,\n"
+        + "    2,\n"
+        + "    3\n"
+        + "  ],\n"
+        + "  \"color\": {\n"
+        + "    \"coloring\": 2147483647\n"
+        + "  }\n"
+        + "}";
+    DummyObject dummyObject = store.fromJson(json);
+    assertEquals("test", dummyObject.name);
+    assertArrayEquals(new int[]{1, 2, 3}, dummyObject.numbers);
+    assertEquals(new Color(255, 255, 255, 127), dummyObject.color);
   }
 
 }
