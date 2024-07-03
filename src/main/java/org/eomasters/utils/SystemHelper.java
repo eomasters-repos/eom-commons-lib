@@ -19,6 +19,11 @@ package org.eomasters.utils;
 
 public class SystemHelper {
 
+  /**
+   * Determines if the Java Runtime is running in headless mode.
+   *
+   * @return true if the Java Runtime is running in headless mode, false otherwise
+   */
   public static boolean isHeadless() {
     return java.lang.System.getProperty("java.awt.headless", "false").equals("true");
   }
