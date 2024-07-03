@@ -1,0 +1,15 @@
+[
+  {
+    "name": "A",
+    "description": "Value A",
+    "value": 6.0
+  }, {
+  "name": "B",
+  "description": "Value B",
+  "value": 7.5
+  }, {
+  "name": "OMEGA",
+  "description": "Value Z",
+  "value": 1.06589
+  }
+]
