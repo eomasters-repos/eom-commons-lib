@@ -31,9 +31,9 @@ class JsonUtilsTest {
 
   @Test
   void readMap() throws IOException {
-    Map<String, Instance> map = JsonUtils.readMap(JsonUtilsTest.class.getResourceAsStream("instances.json"),
-        new TypeToken<>() {
-        });
+    TypeToken<Map<String, Instance>> typetoken = new TypeToken<>() {
+    };
+    Map<String, Instance> map = JsonUtils.readMap(getClass().getResourceAsStream("instances.json"), typetoken);
     assertEquals(3, map.size());
     Set<String> strings = map.keySet();
     assertTrue(strings.containsAll(List.of("A", "B", "Z")));
@@ -53,6 +53,7 @@ class JsonUtilsTest {
     assertEquals("Value Z", z.description);
     assertEquals(1.06589, z.value);
   }
+
 
   private static class Instance {
 

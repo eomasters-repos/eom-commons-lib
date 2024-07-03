@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class JsonUtils {
 
-  public static <T> Map<String, T> readMap(InputStream in, TypeToken<Map<String, T>> typetoken) throws IOException {
+  public static <V, T> Map<V, T> readMap(InputStream in, TypeToken<Map<V, T>> typetoken) throws IOException {
     try (Reader reader = new InputStreamReader(in)) {
       return new Gson().fromJson(reader, typetoken.getType());
     } catch (JsonIOException | JsonSyntaxException e) {
