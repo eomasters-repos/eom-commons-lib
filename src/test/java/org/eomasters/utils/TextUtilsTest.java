@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.eomasters.utils.TextUtils.LineBreak;
 import org.junit.jupiter.api.Test;
 
 public class TextUtilsTest {
@@ -54,5 +55,33 @@ public class TextUtilsTest {
         + "| Header_a | Name_b                 |\n"
         + "| ab       | defghjklmnopqrstuvwxyz |\n"
         + "|          | 1053                   |\n", TextUtils.asFormattedTable(table));
+  }
+
+  @Test
+  void ensureLineBreakUnixStyle() {
+    String multilineText = "Line 1\r\nLine 2\r\nLine 3\r\n";
+    String expected = "Line 1\nLine 2\nLine 3\n";
+    assertEquals(expected, TextUtils.ensureLineBreak(multilineText, LineBreak.LF));
+  }
+
+  @Test
+  void ensureLineBreakWindowsStyle() {
+    String multilineText = "Line 1\rLine 2\rLine 3\r";
+    String expected = "Line 1\r\nLine 2\r\nLine 3\r\n";
+    assertEquals(expected, TextUtils.ensureLineBreak(multilineText, LineBreak.CRLF));
+  }
+
+  @Test
+  void ensureLineBreakMixStyle() {
+    String multilineText = "Line 1\r\nLine 2\rLine 3\n";
+    String expected = "Line 1\rLine 2\rLine 3\r";
+    assertEquals(expected, TextUtils.ensureLineBreak(multilineText, LineBreak.CR));
+  }
+
+  @Test
+  void ensureLineBreakNullInput() {
+    String multilineText = null;
+    String expected = null;
+    assertEquals(expected, TextUtils.ensureLineBreak(multilineText, LineBreak.LF));
   }
 }
