@@ -26,10 +26,10 @@ public class TextUtils {
     LF("\n"),
     CRLF("\r\n");
 
-    private final String lineBreak;
+    public final String ending;
 
-    LineBreak(String lineBreak) {
-      this.lineBreak = lineBreak;
+    LineBreak(String ending) {
+      this.ending = ending;
     }
   }
 
@@ -97,9 +97,9 @@ public class TextUtils {
 
   public static String ensureLineBreak(String text, TextUtils.LineBreak lineBreak) {
     if (text != null) {
-      text = text.replace("\r\n", lineBreak.lineBreak)
-                 .replace("\n", lineBreak.lineBreak)
-                 .replace("\r", lineBreak.lineBreak);
+      text = text.replace("\r\n", lineBreak.ending)
+                 .replace("\n", lineBreak.ending)
+                 .replace("\r", lineBreak.ending);
     }
     return text;
   }
