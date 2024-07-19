@@ -1,4 +1,5 @@
 # eom-commons
+[![Static Badge](https://img.shields.io/badge/%F0%9F%8C%90-eo?style=for-the-badge&logoSize=auto&label=EOMasters&color=262626)](https://www.eomasters.org)
 
 [![Maven Build](https://github.com/eomasters-repos/eom-commons/actions/workflows/mvn-build.yml/badge.svg)](https://github.com/eomasters-repos/eom-commons/actions/workflows/mvn-build.yml)
 
