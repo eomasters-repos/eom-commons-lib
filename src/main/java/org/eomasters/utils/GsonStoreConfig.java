@@ -1,7 +1,7 @@
 /*-
  * ========================LICENSE_START=================================
- * EOM Commons - Library of common utilities for Java
- * -> https://www.eomasters.org/
+ * Toolbox Module - EOMasters Toolbox PRO for SNAP
+ * -> https://www.eomasters.org/eomtbx/modules/toolbox
  * ======================================================================
  * Copyright (C) 2023 - 2024 Marco Peters
  * ======================================================================
@@ -17,15 +17,13 @@
 
 package org.eomasters.utils;
 
-public class SystemHelper {
+import com.google.gson.GsonBuilder;
 
-  /**
-   * Determines if the Java Runtime is running in headless mode.
-   *
-   * @return true if the Java Runtime is running in headless mode, false otherwise
-   */
-  public static boolean isHeadless() {
-    return java.lang.System.getProperty("java.awt.headless", "false").equals("true");
-  }
-
+// TODO: move to eom-commons
+/**
+ * A functional interface for configuring the {@link GsonStore}, more specifically the underlying {@link GsonBuilder}
+ */
+@FunctionalInterface
+public interface GsonStoreConfig {
+    void configBuilder(final GsonBuilder builder);
 }

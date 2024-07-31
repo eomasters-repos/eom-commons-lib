@@ -42,11 +42,9 @@ public class MultiLineText extends JTextArea {
     setEditable(false);
     setLineWrap(true);
     setWrapStyleWord(true);
+    setFont(UIManager.getFont("Label.font"));
     setBackground((Color) UIManager.get("Label.background"));
     setBorder((Border) UIManager.get("TextField.border"));
-    int textWidth = getTextWidth(text);
-    int preferredWidth = (int) (Math.ceil(textWidth / 50.) * 50);
-    setPreferredWidth(preferredWidth);
   }
 
   /**

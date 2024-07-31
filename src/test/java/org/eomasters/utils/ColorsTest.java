@@ -17,7 +17,7 @@
 
 package org.eomasters.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.awt.Color;
 import org.junit.jupiter.api.Test;
@@ -25,11 +25,20 @@ import org.junit.jupiter.api.Test;
 class ColorsTest {
 
   @Test
-  void create() {
-    Color color = Colors.create("#004513FF");
-    assertEquals(0, color.getRed());
-    assertEquals(69, color.getGreen());
-    assertEquals(19, color.getBlue());
+  void createWithValidRGBA() {
+    Color color = Colors.create("#12345678");
+    assertEquals(18, color.getRed());
+    assertEquals(52, color.getGreen());
+    assertEquals(86, color.getBlue());
+    assertEquals(120, color.getAlpha());
+  }
+
+  @Test
+  void createWithOnlyRGB() {
+    Color color = Colors.create("#123456");
+    assertEquals(18, color.getRed());
+    assertEquals(52, color.getGreen());
+    assertEquals(86, color.getBlue());
     assertEquals(255, color.getAlpha());
   }
 
@@ -59,4 +68,5 @@ class ColorsTest {
     assertEquals(6, color.getBlue());
     assertEquals(0, color.getAlpha());
   }
+
 }

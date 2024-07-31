@@ -12,10 +12,16 @@
     <name>EOMasters</name>
     <url>https://www.eomasters.org</url>
   </organization>
+  <licenses>
+    <license>
+      <name>GPL 3</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+    </license>
+  </licenses>
 
   <groupId>org.eomasters</groupId>
   <artifactId>eom-commons</artifactId>
-  <version>0.3.3</version>
+  <version>0.3.4</version>
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
@@ -60,6 +66,12 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.jimfs</groupId>
+      <artifactId>jimfs</artifactId>
+      <version>1.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

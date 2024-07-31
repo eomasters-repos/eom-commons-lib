@@ -21,6 +21,18 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
 
+  public enum LineBreak {
+    CR("\r"),
+    LF("\n"),
+    CRLF("\r\n");
+
+    public final String ending;
+
+    LineBreak(String ending) {
+      this.ending = ending;
+    }
+  }
+
   private static final String MAIL_OWASP_REGEX = "^[a-zA-Z0-9_+&*-]+"
       + "(?:\\.[a-zA-Z0-9_+&*-]+)*@"
       + "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
@@ -81,5 +93,14 @@ public class TextUtils {
       sb.append("\n");
     }
     return sb.toString();
+  }
+
+  public static String ensureLineBreak(String text, TextUtils.LineBreak lineBreak) {
+    if (text != null) {
+      text = text.replace("\r\n", lineBreak.ending)
+                 .replace("\n", lineBreak.ending)
+                 .replace("\r", lineBreak.ending);
+    }
+    return text;
   }
 }

@@ -17,15 +17,18 @@
 
 package org.eomasters.utils;
 
-public class SystemHelper {
+public class Exceptions {
 
   /**
-   * Determines if the Java Runtime is running in headless mode.
+   * Throws the specified throwable if the given condition is true.
    *
-   * @return true if the Java Runtime is running in headless mode, false otherwise
+   * @param condition the condition to check
+   * @param throwable the throwable to throw if the condition is true
+   * @throws T if the condition is true
    */
-  public static boolean isHeadless() {
-    return java.lang.System.getProperty("java.awt.headless", "false").equals("true");
+  public static <T extends Throwable> void throwIf(boolean condition, T throwable) throws T {
+    if (condition) {
+      throw throwable;
+    }
   }
-
 }

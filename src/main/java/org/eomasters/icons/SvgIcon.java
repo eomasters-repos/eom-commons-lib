@@ -20,10 +20,13 @@ package org.eomasters.icons;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import org.eomasters.utils.ImageUtils;
 
 public class SvgIcon extends Icon {
+  private static final Logger LOG = Logger.getLogger("org.eomasters");
+
 
   public SvgIcon(String path, Class<?> loadingClass) {
     super(path, loadingClass);
@@ -31,10 +34,12 @@ public class SvgIcon extends Icon {
 
   @Override
   protected ImageIcon createIcon(int size) {
+    String iconPath = getPath() + ".svg";
     try {
-      InputStream resource = getLoadingClass().getResourceAsStream(getPath() + ".svg");
+      InputStream resource = getLoadingClass().getResourceAsStream(iconPath);
       return new ImageIcon(ImageUtils.loadSvgImage(resource, size, size));
-    } catch (IOException e) {
+    } catch (Throwable e) {
+      LOG.warning("Not able to load image icon: " + iconPath);
       return new ImageIcon(new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB));
     }
   }
